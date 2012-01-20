@@ -1,0 +1,12 @@
+*.swp
+*~
+.classpath
+.history
+.manager
+.project
+.scala_dependencies
+.settings
+.cache
+target
+project/target
+project/boot
