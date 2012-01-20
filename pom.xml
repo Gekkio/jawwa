@@ -10,6 +10,8 @@
 
 	<modules>
 		<module>lang</module>
+		<module>zk-cleditor</module>
+		<module>zk-gritter</module>
 	</modules>
 
 	<properties>
