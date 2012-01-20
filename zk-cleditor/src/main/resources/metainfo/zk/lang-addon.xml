@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<language-addon>
+	<addon-name>jawwa-cleditor</addon-name>
+	<language-name>xul/html</language-name>
+
+	<javascript src="~./jawwa/ext/cleditor/jquery.cleditor.min.js" />
+	<stylesheet href="~./jawwa/ext/cleditor/jquery.cleditor.css" type="text/css" />
+
+	<javascript package="jawwa.cleditor" />
+
+	<component>
+		<component-name>cleditor</component-name>
+		<component-class>fi.jawsy.jawwa.zk.cleditor.Cleditor</component-class>
+		<widget-class>jawwa.cleditor.Cleditor</widget-class>
+	</component>
+</language-addon>
