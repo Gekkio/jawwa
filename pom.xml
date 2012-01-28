@@ -10,6 +10,7 @@
 
 	<modules>
 		<module>lang</module>
+		<module>zk-atmosphere</module>
 		<module>zk-cleditor</module>
 		<module>zk-gritter</module>
 	</modules>
@@ -17,10 +18,13 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
+		<atmosphere.version>0.8.4</atmosphere.version>
 		<guava.version>11.0.1</guava.version>
+		<javax.servlet.version>3.0.1</javax.servlet.version>
 		<junit.version>4.10</junit.version>
 		<lombok.version>0.10.8</lombok.version>
 		<scala.version>2.9.1</scala.version>
+		<slf4j.version>1.6.1</slf4j.version>
 		<specs2.version>1.7.1</specs2.version>
 		<zk.version>5.0.10</zk.version>
 	</properties>
@@ -115,14 +119,29 @@
 				<version>${guava.version}</version>
 			</dependency>
 			<dependency>
+				<groupId>javax.servlet</groupId>
+				<artifactId>javax.servlet-api</artifactId>
+				<version>${javax.servlet.version}</version>
+			</dependency>
+			<dependency>
 				<groupId>junit</groupId>
 				<artifactId>junit</artifactId>
 				<version>${junit.version}</version>
 			</dependency>
 			<dependency>
+				<groupId>org.atmosphere</groupId>
+				<artifactId>atmosphere-runtime</artifactId>
+				<version>${atmosphere.version}</version>
+			</dependency>
+			<dependency>
 				<groupId>org.projectlombok</groupId>
 				<artifactId>lombok</artifactId>
 				<version>${lombok.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-api</artifactId>
+				<version>${slf4j.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.specs2</groupId>
