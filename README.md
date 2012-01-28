@@ -25,6 +25,7 @@ General purpose Java utilities.
     <dependency>
       <groupId>fi.jawsy.jawwa</groupId>
       <artifactId>jawwa-lang</artifactId>
+      <version>0.1.0-SNAPSHOT</version>
     </dependency>
 
 ### <a href="">jawwa-zk-atmosphere</a>
