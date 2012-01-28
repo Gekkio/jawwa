@@ -15,6 +15,7 @@
 		<module>zk-gritter</module>
 		<module>zk-metrics</module>
 		<module>zk-rabbitmq</module>
+		<module>zk-raphaeljs</module>
 	</modules>
 
 	<properties>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<language-addon>
+	<addon-name>jawwa-raphaeljs</addon-name>
+	<language-name>xul/html</language-name>
+
+	<version>
+		<zk-version>5.0.0</zk-version>
+	</version>
+
+	<javascript src="~./jawwa/ext/raphaeljs/raphael-min.js" />
+
+	<javascript package="jawwa.raphaeljs" />
+
+	<component>
+		<component-name>raphaelraw</component-name>
+		<component-class>fi.jawsy.jawwa.zk.raphaeljs.RaphaelRaw</component-class>
+		<widget-class>jawwa.raphaeljs.RaphaelRaw</widget-class>
+	</component>
+</language-addon>
