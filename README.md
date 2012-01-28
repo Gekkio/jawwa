@@ -7,6 +7,12 @@ Jawwa is a library project with many useful things for Java developers.
 
 ## Modules
 
+### Javadoc
+
+Aggregated Javadoc for all modules can be found here:
+
+[http://oss.jawsy.fi/api/jawwa/0.1.0/](http://oss.jawsy.fi/api/jawwa/0.1.0/)
+
 ### Maven repository
 
 All modules are deployed in this Maven repository:
