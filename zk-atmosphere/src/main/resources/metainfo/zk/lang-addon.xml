@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<language-addon>
+	<addon-name>jawwa-zk-atmosphere</addon-name>
+	<language-name>xul/html</language-name>
+
+	<javascript package="jawwa.atmosphere" merge="true" />
+</language-addon>
