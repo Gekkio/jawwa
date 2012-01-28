@@ -104,7 +104,7 @@ public abstract class Option<T> implements Iterable<T>, Serializable {
      * @return Some(value) if value is instanceof clazz, None otherwise
      */
     @SuppressWarnings("unchecked")
-    public static <A> Option<A> matchType(final Object value, final Class<A> clazz) {
+    public static <A> Option<A> requireType(final Object value, final Class<A> clazz) {
         if (value == null || !clazz.isAssignableFrom(value.getClass())) {
             return none();
         }
@@ -313,6 +313,26 @@ public abstract class Option<T> implements Iterable<T>, Serializable {
      */
     public abstract Option<T> orElse(Supplier<Option<T>> defaultOptionSupplier);
 
+    /**
+     * Converts the container to an Either value. If the container contains a value, Either.Right containing the value
+     * is returned. Otherwise, Either.Left containing the given left value is returned.
+     * 
+     * @param leftValue
+     *            value to be used if the container is empty
+     * @return Either.right(value) if container has a value, Either.left(leftValue) otherwise.
+     */
+    public abstract <L> Either<L, T> toRight(L leftValue);
+
+    /**
+     * Converts the container to an Either value. If the container contains a value, Either.Left containing the value is
+     * returned. Otherwise, Either.Right containing the given right value is returned.
+     * 
+     * @param rightValue
+     *            value to be used if the container is empty
+     * @return Either.left(value) if container has a value, Either.right(rightValue) otherwise.
+     */
+    public abstract <R> Either<T, R> toLeft(R rightValue);
+
     private static final class None<T> extends Option<T> {
 
         @SuppressWarnings("rawtypes")
@@ -406,6 +426,20 @@ public abstract class Option<T> implements Iterable<T>, Serializable {
             return "None";
         }
 
+        /**
+         * Always returns rightValue wrapped in Right.
+         */
+        public <R> Either<T, R> toLeft(R rightValue) {
+            return Either.right(rightValue);
+        }
+
+        /**
+         * Always returns leftValue wrapped in Left.
+         */
+        public <L> Either<L, T> toRight(L leftValue) {
+            return Either.left(leftValue);
+        }
+
     }
 
     @RequiredArgsConstructor
@@ -455,6 +489,9 @@ public abstract class Option<T> implements Iterable<T>, Serializable {
             return value;
         }
 
+        /**
+         * Always returns the underlying value.
+         */
         @Override
         public T getOrNull() {
             return value;
@@ -534,6 +571,22 @@ public abstract class Option<T> implements Iterable<T>, Serializable {
                 out.writeObject(value);
             }
 
+        }
+
+        /**
+         * Always returns the underlying value wrapped in Right.
+         */
+        @Override
+        public <L> Either<L, T> toRight(L leftValue) {
+            return Either.right(value);
+        }
+
+        /**
+         * Always returns the underlying value wrapped in Left.
+         */
+        @Override
+        public <R> Either<T, R> toLeft(R rightValue) {
+            return Either.left(value);
         }
 
     }
