@@ -16,4 +16,9 @@
 		<component-class>fi.jawsy.jawwa.zk.raphaeljs.RaphaelRaw</component-class>
 		<widget-class>jawwa.raphaeljs.RaphaelRaw</widget-class>
 	</component>
+	<component>
+		<component-name>raphael</component-name>
+		<component-class>fi.jawsy.jawwa.zk.raphaeljs.Raphael</component-class>
+		<widget-class>jawwa.raphaeljs.RaphaelRaw</widget-class>
+	</component>
 </language-addon>

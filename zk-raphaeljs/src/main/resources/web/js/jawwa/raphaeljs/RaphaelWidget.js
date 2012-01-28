@@ -1,6 +1,6 @@
 zk.$package('jawwa.raphaeljs');
 
-jawwa.raphaeljs.Base = zk.$extends(zk.Widget, {
+jawwa.raphaeljs.RaphaelWidget = zk.$extends(zk.Widget, {
   paper_: null,
   _rootNode: null,
 
