@@ -41,6 +41,14 @@
 			<id>jawsy.fi</id>
 			<url>file:///var/www/oss.jawsy.fi/api/jawwa/${project.version}</url>
 		</site>
+		<repository>
+			<id>jawsy-releases</id>
+			<url>http://oss.jawsy.fi/maven2/releases</url>
+		</repository>
+		<snapshotRepository>
+			<id>jawsy-releases</id>
+			<url>http://oss.jawsy.fi/maven2/snapshots</url>
+		</snapshotRepository>
 	</distributionManagement>
 
 	<scm>
