@@ -31,7 +31,7 @@ General purpose Java utilities.
     <dependency>
       <groupId>fi.jawsy.jawwa</groupId>
       <artifactId>jawwa-lang</artifactId>
-      <version>0.1.0-SNAPSHOT</version>
+      <version>0.1.0</version>
     </dependency>
 
 ### <a href="">jawwa-zk-atmosphere</a>
@@ -70,7 +70,7 @@ web.xml:
     <dependency>
       <groupId>fi.jawsy.jawwa</groupId>
       <artifactId>jawwa-zk-atmosphere</artifactId>
-      <version>0.1.0-SNAPSHOT</version>
+      <version>0.1.0</version>
     </dependency>
 
 ### <a href="">jawwa-zk-gritter</a>
@@ -82,7 +82,7 @@ Growl-like notifications (uses [Gritter for jQuery](https://github.com/jboesch/G
     <dependency>
       <groupId>fi.jawsy.jawwa</groupId>
       <artifactId>jawwa-zk-gritter</artifactId>
-      <version>0.1.0-SNAPSHOT</version>
+      <version>0.1.0</version>
     </dependency>
 
 ### <a href="">jawwa-zk-cleditor</a>
@@ -95,5 +95,5 @@ Uses [a custom version of CLEditor](https://github.com/Gekkio/cleditor) that mak
     <dependency>
       <groupId>fi.jawsy.jawwa</groupId>
       <artifactId>jawwa-zk-cleditor</artifactId>
-      <version>0.1.0-SNAPSHOT</version>
+      <version>0.1.0</version>
     </dependency>
