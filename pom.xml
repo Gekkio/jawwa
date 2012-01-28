@@ -46,7 +46,7 @@
 			<url>http://oss.jawsy.fi/maven2/releases</url>
 		</repository>
 		<snapshotRepository>
-			<id>jawsy-releases</id>
+			<id>jawsy-snapshots</id>
 			<url>http://oss.jawsy.fi/maven2/snapshots</url>
 		</snapshotRepository>
 	</distributionManagement>
