@@ -9,10 +9,18 @@ import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zk.ui.sys.ContentRenderer;
 
+/**
+ * Rich-text editor component.
+ */
 public class Cleditor extends HtmlBasedComponent {
 
     private static final long serialVersionUID = -4308135132232837280L;
 
+    /**
+     * Event that is posted when the editor value has changed.
+     * 
+     * Changes are detected when focus is changed on the client side.
+     */
     public static class ChangeEvent extends Event {
         private static final long serialVersionUID = -3456210455157915302L;
 

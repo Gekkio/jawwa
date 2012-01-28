@@ -4,6 +4,9 @@ import java.io.Serializable;
 
 import com.google.common.base.Predicate;
 
+/**
+ * Predicates for String objects.
+ */
 public final class StringPredicates {
 
     private StringPredicates() {

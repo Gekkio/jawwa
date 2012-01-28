@@ -5,6 +5,9 @@ import java.util.Iterator;
 
 import com.google.common.collect.AbstractIterator;
 
+/**
+ * Utilities for Option objects.
+ */
 public final class Options {
 
     private Options() {

@@ -23,8 +23,7 @@ import org.zkoss.zk.ui.util.Clients;
 import fi.jawsy.jawwa.lang.Option;
 
 /**
- * Asynchronous server push implementation based on <a href="https://github.com/Atmosphere/atmosphere">Atmosphere
- * framework</a>.
+ * ZK server push implementation based on Atmosphere.
  * 
  * Only supports asynchronous updates (Executions.schedule) and will throw exceptions if synchronous updates
  * (Executions.activate/deactivate) is attempted.

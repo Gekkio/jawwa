@@ -23,6 +23,9 @@ import org.zkoss.zk.ui.sys.WebAppCtrl;
 
 import fi.jawsy.jawwa.lang.Either;
 
+/**
+ * Atmosphere handler that integrates Atmosphere with ZK server push.
+ */
 public class ZkAtmosphereHandler implements AtmosphereHandler<HttpServletRequest, HttpServletResponse> {
 
     @Override
