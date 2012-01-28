@@ -1,5 +1,6 @@
 package fi.jawsy.jawwa.zk.gritter;
 
+import java.io.Serializable;
 import java.util.Map;
 
 import lombok.AccessLevel;
@@ -39,7 +40,9 @@ public final class Gritter {
      */
     @Data
     @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-    public static class Notification implements JSONAware {
+    public static class Notification implements JSONAware, Serializable {
+        private static final long serialVersionUID = -1345910234654400143L;
+
         /**
          * Notification title.
          */
@@ -203,6 +206,15 @@ public final class Gritter {
             Preconditions.checkState(!Strings.isNullOrEmpty(text), "text has to be set");
             return new Notification(title, text, image, sticky, time, sclass);
         }
+
+        /**
+         * Shows a notification.
+         * 
+         * Must be called in a Servlet thread with an active ZK execution. Shortcut to Gritter.show(this.build());
+         */
+        public void show() {
+            Gritter.show(this.build());
+        }
     }
 
     /**
@@ -215,7 +227,7 @@ public final class Gritter {
     }
 
     /**
-     * Shows a notification to the screen.
+     * Shows a notification.
      * 
      * Must be called in a Servlet thread with an active ZK execution.
      * 
@@ -228,7 +240,7 @@ public final class Gritter {
     }
 
     /**
-     * Removes all notifications from the screen.
+     * Removes all remaining notifications.
      * 
      * Must be called in a Servlet thread with an active ZK execution.
      */
