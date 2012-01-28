@@ -36,6 +36,19 @@
 		<maven.yuicompressor.version>1.2</maven.yuicompressor.version>
 	</properties>
 
+	<organization>
+		<name>Jawsy Solutions</name>
+		<url>http://jawsy.fi</url>
+	</organization>
+
+	<licenses>
+		<license>
+			<name>Apache 2</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+
 	<distributionManagement>
 		<repository>
 			<id>jawsy-releases</id>

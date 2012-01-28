@@ -3,7 +3,7 @@ jawwa
 
 ## Introduction
 
-Jawwa is a library project with many useful things for Java developers.
+Jawwa is a multi-module Java library project containing many useful things for Java developers.
 
 ## Modules
 
