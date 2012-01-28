@@ -24,11 +24,11 @@ public final class JsPaper {
         statements.add(statement);
     }
 
-    public JsNumber getWidth() {
+    public JsNumber width() {
         return WIDTH;
     }
 
-    public JsNumber getHeight() {
+    public JsNumber height() {
         return HEIGHT;
     }
 
@@ -40,28 +40,32 @@ public final class JsPaper {
         return new JsCircle(this, JsExp.wrap(x), JsExp.wrap(y), JsExp.wrap(r));
     }
 
-    public JsCircle circle(JsNumber x, int y, int r) {
-        return new JsCircle(this, x, JsExp.wrap(y), JsExp.wrap(r));
-    }
-
-    public JsCircle circle(JsNumber x, JsNumber y, int r) {
-        return new JsCircle(this, x, y, JsExp.wrap(r));
-    }
-
     public JsCircle circle(JsNumber x, JsNumber y, JsNumber r) {
         return new JsCircle(this, x, y, r);
     }
 
-    public JsCircle circle(int x, JsNumber y, int r) {
-        return new JsCircle(this, JsExp.wrap(x), y, JsExp.wrap(r));
+    public JsEllipse ellipse(int x, int y, int rx, int ry) {
+        return new JsEllipse(this, JsExp.wrap(x), JsExp.wrap(y), JsExp.wrap(rx), JsExp.wrap(ry));
     }
 
-    public JsCircle circle(int x, JsNumber y, JsNumber r) {
-        return new JsCircle(this, JsExp.wrap(x), y, r);
+    public JsEllipse ellipse(JsNumber x, JsNumber y, JsNumber rx, JsNumber ry) {
+        return new JsEllipse(this, x, y, rx, ry);
     }
 
-    public JsCircle circle(int x, int y, JsNumber r) {
-        return new JsCircle(this, JsExp.wrap(x), JsExp.wrap(y), r);
+    public JsRectangle rect(int x, int y, int width, int height, int r) {
+        return new JsRectangle(this, JsExp.wrap(x), JsExp.wrap(y), JsExp.wrap(width), JsExp.wrap(height), JsExp.wrap(r));
+    }
+
+    public JsRectangle rect(JsNumber x, JsNumber y, JsNumber width, JsNumber height, JsNumber r) {
+        return new JsRectangle(this, x, y, width, height, r);
+    }
+
+    public JsText text(int x, int y, String text) {
+        return new JsText(this, JsExp.wrap(x), JsExp.wrap(y), JsExp.wrap(text));
+    }
+
+    public JsText text(JsNumber x, JsNumber y, JsString text) {
+        return new JsText(this, x, y, text);
     }
 
     String nextVariableName() {

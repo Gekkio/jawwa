@@ -1,67 +1,31 @@
 package fi.jawsy.jawwa.zk.raphaeljs;
 
-import java.util.Map;
-
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.val;
 
-import com.google.common.collect.Maps;
-
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = true)
 @ToString
-public final class JsCircle {
+public final class JsCircle extends JsElement<JsCircle> {
 
-    private final JsPaper paper;
-    private final JsNumber w;
-    private final JsNumber h;
+    private final JsNumber x;
+    private final JsNumber y;
     private final JsNumber r;
-    private final String name;
 
-    private AttrExpression attrStatement;
-
-    private class AttrExpression implements JsExpression {
-
-        private final Map<String, JsExpression> attrs = Maps.newLinkedHashMap();
-
-        @Override
-        public String print() {
-            val sb = new StringBuilder();
-            sb.append(name);
-            sb.append('.');
-            sb.append("attr({");
-            val i = attrs.entrySet().iterator();
-            while (i.hasNext()) {
-                val entry = i.next();
-                sb.append('"');
-                sb.append(entry.getKey());
-                sb.append("\":");
-                sb.append(entry.getValue().print());
-                if (i.hasNext())
-                    sb.append(',');
-            }
-            sb.append("})");
-            return sb.toString();
-        }
-
-    }
-
-    JsCircle(JsPaper paper, JsNumber w, JsNumber h, JsNumber r) {
-        this.paper = paper;
-        this.w = w;
-        this.h = h;
+    JsCircle(JsPaper paper, JsNumber x, JsNumber y, JsNumber r) {
+        super(paper);
+        this.x = x;
+        this.y = y;
         this.r = r;
-
-        this.name = paper.nextVariableName();
 
         val sb = new StringBuilder();
         sb.append("var ");
         sb.append(this.name);
         sb.append("=");
         sb.append("paper.circle(");
-        sb.append(w.print());
+        sb.append(x.print());
         sb.append(',');
-        sb.append(h.print());
+        sb.append(y.print());
         sb.append(',');
         sb.append(r.print());
         sb.append(')');
@@ -69,23 +33,27 @@ public final class JsCircle {
         paper.addStatement(JsExp.raw(sb.toString()));
     }
 
-    public JsCircle opacity(int value) {
-        return attr("opacity", JsExp.wrap(value));
+    public JsCircle fill(JsColor color) {
+        return attr("fill", color);
     }
 
-    public JsCircle opacity(double value) {
-        return attr("opacity", JsExp.wrap(value));
+    public JsCircle fillOpacity(double value) {
+        return attr("fill-opacity", JsExp.wrap(value));
     }
 
-    public JsCircle opacity(JsNumber value) {
-        return attr("opacity", value);
+    public JsCircle fillOpacity(int value) {
+        return attr("fill-opacity", JsExp.wrap(value));
     }
 
-    public JsCircle radius(int value) {
-        return attr("radius", JsExp.wrap(value));
+    public JsCircle fillOpacity(JsNumber value) {
+        return attr("fill-opacity", value);
     }
 
     public JsCircle radius(double value) {
+        return attr("radius", JsExp.wrap(value));
+    }
+
+    public JsCircle radius(int value) {
         return attr("radius", JsExp.wrap(value));
     }
 
@@ -93,16 +61,8 @@ public final class JsCircle {
         return attr("radius", value);
     }
 
-    public JsCircle stroke(JsColor color) {
-        return attr("stroke", color);
-    }
-
-    private JsCircle attr(String attrName, JsExpression attrValue) {
-        if (attrStatement == null) {
-            attrStatement = new AttrExpression();
-            paper.addStatement(attrStatement);
-        }
-        attrStatement.attrs.put(attrName, attrValue);
+    @Override
+    protected JsCircle me() {
         return this;
     }
 

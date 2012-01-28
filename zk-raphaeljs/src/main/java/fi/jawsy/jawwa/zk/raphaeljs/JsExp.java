@@ -4,7 +4,7 @@ import org.zkoss.json.JSONValue;
 
 import com.google.common.base.Function;
 
-final class JsExp {
+public final class JsExp {
 
     private JsExp() {
     }
@@ -16,12 +16,16 @@ final class JsExp {
         }
     };
 
-    static JsNumber wrap(int value) {
+    public static JsNumber wrap(int value) {
         return new JsNumber.IntLiteral(value);
     }
 
-    static JsNumber wrap(double value) {
+    public static JsNumber wrap(double value) {
         return new JsNumber.DoubleLiteral(value);
+    }
+
+    public static JsString wrap(String value) {
+        return new JsString(value);
     }
 
     static JsExpression raw(final String value) {
