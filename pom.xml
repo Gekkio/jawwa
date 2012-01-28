@@ -37,17 +37,13 @@
 	</properties>
 
 	<distributionManagement>
-		<site>
-			<id>jawsy.fi</id>
-			<url>file:///var/www/oss.jawsy.fi/api/jawwa/${project.version}</url>
-		</site>
 		<repository>
 			<id>jawsy-releases</id>
-			<url>http://oss.jawsy.fi/maven2/releases</url>
+			<url>https://jawsy.fi/nexus/content/repositories/releases</url>
 		</repository>
 		<snapshotRepository>
 			<id>jawsy-snapshots</id>
-			<url>http://oss.jawsy.fi/maven2/snapshots</url>
+			<url>https://jawsy.fi/nexus/content/repositories/snapshots</url>
 		</snapshotRepository>
 	</distributionManagement>
 
