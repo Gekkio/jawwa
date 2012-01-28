@@ -55,6 +55,10 @@
 					<jswarn>false</jswarn>
 					<nosuffix>true</nosuffix>
 					<statistics>false</statistics>
+					<excludes>
+						<exclude>**/web/jawwa/ext/**/*.js</exclude>
+						<exclude>**/web/jawwa/ext/**/*.css</exclude>
+					</excludes>
 				</configuration>
 			</plugin>
 			<plugin>
