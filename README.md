@@ -22,7 +22,7 @@ All modules are deployed in this Maven repository:
       <url>http://oss.jawsy.fi/maven2/releases/</url>
     </repository>
 
-### <a href="">jawwa-lang</a>
+### jawwa-lang
 
 General purpose Java utilities.
 
@@ -34,7 +34,7 @@ General purpose Java utilities.
       <version>0.1.0</version>
     </dependency>
 
-### <a href="">jawwa-zk-atmosphere</a>
+### jawwa-zk-atmosphere
 
 Asynchronous ZK server push implementation based on [Atmosphere](https://github.com/Atmosphere/atmosphere)
 
@@ -73,7 +73,7 @@ web.xml:
       <version>0.1.0</version>
     </dependency>
 
-### <a href="">jawwa-zk-gritter</a>
+### jawwa-zk-gritter
 
 Growl-like notifications (uses [Gritter for jQuery](https://github.com/jboesch/Gritter))
 
@@ -85,7 +85,7 @@ Growl-like notifications (uses [Gritter for jQuery](https://github.com/jboesch/G
       <version>0.1.0</version>
     </dependency>
 
-### <a href="">jawwa-zk-cleditor</a>
+### jawwa-zk-cleditor
 
 Rich-text editor component based on [CLEditor](http://premiumsoftware.net/cleditor/).
 Uses [a custom version of CLEditor](https://github.com/Gekkio/cleditor) that makes the editor usable in dynamic websites.
