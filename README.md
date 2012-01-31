@@ -1,17 +1,25 @@
-jawwa
-=================
+Jawwa: Jawsy Solutions libraries for Java 1.6+
+==============================================
 
 ## Introduction
 
 Jawwa is a multi-module Java library project containing many useful things for Java developers.
 
-## Modules
+## Documentation
+
+### Reference manual
+
+The reference manual can be found here:
+
+[http://oss.jawsy.fi/docs/jawwa/0.1.0/](http://oss.jawsy.fi/docs/jawwa/0.1.0/)
 
 ### Javadoc
 
 Aggregated Javadoc for all modules can be found here:
 
 [http://oss.jawsy.fi/api/jawwa/0.1.0/](http://oss.jawsy.fi/api/jawwa/0.1.0/)
+
+## Modules
 
 ### Maven repository
 
