@@ -64,6 +64,10 @@ web.xml:
       <!-- Remove async-supported if you are not using Servlet 3.0 -->
       <async-supported>true</async-supported>
     </servlet>
+    <servlet-mapping>
+      <servlet-name>AtmosphereServlet</servlet-name>
+      <url-pattern>/zkau/comet</url-pattern>
+    </servlet-mapping>
 
 #### Maven dependency
 
