@@ -10,6 +10,7 @@ import lombok.val;
 import org.atmosphere.cpr.AtmosphereResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.zkoss.lang.Library;
 import org.zkoss.zk.au.out.AuScript;
 import org.zkoss.zk.ui.Desktop;
 import org.zkoss.zk.ui.DesktopUnavailableException;
@@ -19,6 +20,8 @@ import org.zkoss.zk.ui.sys.DesktopCtrl;
 import org.zkoss.zk.ui.sys.Scheduler;
 import org.zkoss.zk.ui.sys.ServerPush;
 import org.zkoss.zk.ui.util.Clients;
+
+import com.google.common.base.Strings;
 
 import fi.jawsy.jawwa.lang.Option;
 
@@ -30,13 +33,22 @@ import fi.jawsy.jawwa.lang.Option;
  */
 public class AtmosphereServerPush implements ServerPush {
 
-    public static final int TIMEOUT = 300000;
+    public static final int DEFAULT_TIMEOUT = 1000 * 60 * 5;
 
     private final AtomicReference<Desktop> desktop = new AtomicReference<Desktop>();
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
     private final AtomicReference<AtmosphereResource<HttpServletRequest, HttpServletResponse>> resource = new AtomicReference<AtmosphereResource<HttpServletRequest, HttpServletResponse>>();
-    private final int timeout = TIMEOUT;
+    private final int timeout;
+
+    public AtmosphereServerPush() {
+        val timeoutString = Library.getProperty("fi.jawsy.jawwa.zk.atmosphere.timeout");
+        if (Strings.isNullOrEmpty(timeoutString)) {
+            timeout = DEFAULT_TIMEOUT;
+        } else {
+            timeout = Integer.valueOf(timeoutString);
+        }
+    }
 
     @Override
     public boolean activate(long timeout) throws InterruptedException, DesktopUnavailableException {
