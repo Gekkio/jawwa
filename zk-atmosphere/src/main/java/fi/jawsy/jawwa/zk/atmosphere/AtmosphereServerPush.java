@@ -100,7 +100,9 @@ public class AtmosphereServerPush implements ServerPush {
         }
 
         log.debug("Starting server push for " + desktop);
-        Clients.response("jawwa.atmosphere.serverpush", new AuScript(null, "jawwa.atmosphere.startServerPush('" + desktop.getId() + "', " + timeout + ");"));
+        int clientTimeout = timeout + 1000 * 60;
+        Clients.response("jawwa.atmosphere.serverpush", new AuScript(null, "jawwa.atmosphere.startServerPush('" + desktop.getId() + "', " + clientTimeout
+                + ");"));
     }
 
     @Override
