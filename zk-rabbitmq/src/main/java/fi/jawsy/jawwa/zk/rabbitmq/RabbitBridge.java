@@ -1,10 +1,6 @@
 package fi.jawsy.jawwa.zk.rabbitmq;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import lombok.RequiredArgsConstructor;
@@ -22,18 +18,18 @@ import com.rabbitmq.client.Envelope;
 @RequiredArgsConstructor
 public class RabbitBridge {
 
-    private static final int DEFAULT_BUFFER_SIZE = 1024 * 2;
-
     private final String exchangeName;
     private final String routingKey;
     private final EventQueue zkQueue;
+    private final RabbitBridgeSerializer serializer;
     private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
     private Channel channel;
 
-    public RabbitBridge(String exchangeName, EventQueue zkQueue) {
+    public RabbitBridge(String exchangeName, EventQueue zkQueue, RabbitBridgeSerializer serializer) {
         this.exchangeName = exchangeName;
         this.routingKey = exchangeName + ".message";
         this.zkQueue = zkQueue;
+        this.serializer = serializer;
     }
 
     public void setConnection(Connection connection) throws IOException {
@@ -48,11 +44,7 @@ public class RabbitBridge {
             channel.basicConsume(queueName, true, new DefaultConsumer(channel) {
                 @Override
                 public void handleDelivery(String consumerTag, Envelope envelope, BasicProperties properties, byte[] body) throws IOException {
-                    try {
-                        zkQueue.publish(deserialize(body));
-                    } catch (ClassNotFoundException e) {
-                        throw new IllegalStateException("Event deserialization failed", e);
-                    }
+                    zkQueue.publish(serializer.deserialize(body));
                 }
             });
         } finally {
@@ -60,28 +52,12 @@ public class RabbitBridge {
         }
     }
 
-    private byte[] serialize(Event event) throws IOException {
-        val byteOut = new ByteArrayOutputStream(DEFAULT_BUFFER_SIZE);
-        val out = new ObjectOutputStream(byteOut);
-
-        out.writeObject(event);
-
-        return byteOut.toByteArray();
-    }
-
-    private Event deserialize(byte[] bytes) throws IOException, ClassNotFoundException {
-        val byteIn = new ByteArrayInputStream(bytes);
-        val in = new ObjectInputStream(byteIn);
-
-        return (Event) in.readObject();
-    }
-
     public void publish(Event event) throws IOException {
         try {
             lock.readLock().lock();
             if (channel == null)
                 throw new RabbitBridgeException("No AMQP channel");
-            channel.basicPublish(exchangeName, routingKey, null, serialize(event));
+            channel.basicPublish(exchangeName, routingKey, null, serializer.serialize(event));
         } finally {
             lock.readLock().unlock();
         }

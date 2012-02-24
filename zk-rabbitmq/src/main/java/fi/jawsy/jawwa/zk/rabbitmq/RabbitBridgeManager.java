@@ -21,6 +21,7 @@ public class RabbitBridgeManager {
     private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
     private final Map<String, RabbitBridge> bridges = Maps.newHashMap();
     private final ConnectionFactory connectionFactory;
+    private final RabbitBridgeSerializer serializer;
     private final WebApp webApp;
 
     private Connection connection;
@@ -44,7 +45,7 @@ public class RabbitBridgeManager {
 
             val zkQueue = EventQueues.lookup(name, webApp, true);
 
-            val bridge = new RabbitBridge(name, zkQueue);
+            val bridge = new RabbitBridge(name, zkQueue, serializer);
             bridges.put(name, bridge);
 
             return true;

@@ -23,8 +23,12 @@ public class RabbitBridgesInit implements WebAppInit, WebAppCleanup {
             return;
         val connectionFactory = new ConnectionFactory();
 
-        val manager = new RabbitBridgeManager(connectionFactory, wapp);
+        val manager = new RabbitBridgeManager(connectionFactory, getSerializer(), wapp);
         wapp.setAttribute(RabbitBridges.ATTR_NAME, manager);
+    }
+
+    protected RabbitBridgeSerializer getSerializer() {
+        return new RabbitBridgeSerializer.Default();
     }
 
 }
