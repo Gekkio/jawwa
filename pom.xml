@@ -13,6 +13,7 @@
 		<module>zk-atmosphere</module>
 		<module>zk-cleditor</module>
 		<module>zk-gritter</module>
+		<module>zk-rabbitmq</module>
 	</modules>
 
 	<properties>
@@ -23,6 +24,7 @@
 		<javax.servlet.version>3.0.1</javax.servlet.version>
 		<junit.version>4.10</junit.version>
 		<lombok.version>0.10.8</lombok.version>
+		<rabbitmq.version>2.7.1</rabbitmq.version>
 		<scala.version>2.9.1</scala.version>
 		<slf4j.version>1.6.1</slf4j.version>
 		<specs2.version>1.7.1</specs2.version>
@@ -197,6 +199,11 @@
 				<groupId>com.google.guava</groupId>
 				<artifactId>guava</artifactId>
 				<version>${guava.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.rabbitmq</groupId>
+				<artifactId>amqp-client</artifactId>
+				<version>${rabbitmq.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>javax.servlet</groupId>
