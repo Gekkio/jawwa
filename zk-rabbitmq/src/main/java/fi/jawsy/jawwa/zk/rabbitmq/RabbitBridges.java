@@ -4,6 +4,7 @@ import lombok.val;
 
 import org.zkoss.zk.ui.WebApp;
 import org.zkoss.zk.ui.WebApps;
+import org.zkoss.zk.ui.event.Event;
 
 public final class RabbitBridges {
 
@@ -17,6 +18,13 @@ public final class RabbitBridges {
         if (manager == null)
             throw new RabbitBridgeException("No bridge manager in web app");
         return manager;
+    }
+
+    public static void publish(String name, Event event) {
+        val webApp = WebApps.getCurrent();
+        if (webApp == null)
+            throw new RabbitBridgeException("No current web app");
+        getManager(webApp).publish(name, event);
     }
 
     public static boolean addBridge(String name) {

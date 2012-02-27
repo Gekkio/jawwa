@@ -32,6 +32,15 @@ public class RabbitBridge {
         this.serializer = serializer;
     }
 
+    public void clearConnection() {
+        try {
+            lock.writeLock().lock();
+            channel = null;
+        } finally {
+            lock.writeLock().unlock();
+        }
+    }
+
     public void setConnection(Connection connection) throws IOException {
         try {
             lock.writeLock().lock();

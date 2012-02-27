@@ -14,6 +14,8 @@ import org.zkoss.zk.ui.event.EventQueues;
 import com.google.common.collect.Maps;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
+import com.rabbitmq.client.ShutdownListener;
+import com.rabbitmq.client.ShutdownSignalException;
 
 @RequiredArgsConstructor
 public class RabbitBridgeManager {
@@ -29,6 +31,25 @@ public class RabbitBridgeManager {
     void ensureConnectivity() throws IOException {
         if (connection == null) {
             connection = connectionFactory.newConnection();
+            for (val bridge : bridges.values()) {
+                bridge.setConnection(connection);
+            }
+            connection.addShutdownListener(new ShutdownListener() {
+                @Override
+                public void shutdownCompleted(ShutdownSignalException cause) {
+                    if (!cause.isInitiatedByApplication()) {
+                        try {
+                            lock.writeLock().lock();
+                            for (val bridge : bridges.values()) {
+                                bridge.clearConnection();
+                            }
+                            connection = null;
+                        } finally {
+                            lock.writeLock().unlock();
+                        }
+                    }
+                }
+            });
         }
         if (connection == null) {
             throw new RabbitBridgeException("No AMQP connection");
@@ -47,6 +68,7 @@ public class RabbitBridgeManager {
 
             val bridge = new RabbitBridge(name, zkQueue, serializer);
             bridges.put(name, bridge);
+            bridge.setConnection(connection);
 
             return true;
         } catch (IOException e) {
