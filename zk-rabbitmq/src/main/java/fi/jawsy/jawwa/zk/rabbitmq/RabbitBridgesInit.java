@@ -17,7 +17,6 @@ public class RabbitBridgesInit implements WebAppInit, WebAppCleanup {
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-    public static final int DEFAULT_CONNECTION_TIMEOUT = 10000;
     public static final int DEFAULT_RECONNECT_DELAY = 5000;
     public static final int DEFAULT_RECONNECT_TIMEOUT = 30000;
 
@@ -47,13 +46,18 @@ public class RabbitBridgesInit implements WebAppInit, WebAppCleanup {
             return;
 
         val connectionFactory = new ConnectionFactory();
-        connectionFactory.setConnectionTimeout(libraryInt("connectionTimeout").getOrElse(DEFAULT_CONNECTION_TIMEOUT));
 
+        for (val value : libraryInt("connectionTimeout")) {
+            connectionFactory.setConnectionTimeout(value);
+        }
         for (val value : libraryString("host")) {
             connectionFactory.setHost(value);
         }
         for (val value : libraryInt("port")) {
             connectionFactory.setPort(value);
+        }
+        for (val value : libraryString("username")) {
+            connectionFactory.setUsername(value);
         }
         for (val value : libraryString("password")) {
             connectionFactory.setPassword(value);
