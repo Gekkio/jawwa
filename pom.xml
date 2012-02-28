@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>fi.jawsy.jawwa</groupId>
 	<artifactId>jawwa-parent</artifactId>
-	<version>0.1.0</version>
+	<version>0.2.0</version>
 	<packaging>pom</packaging>
 	<name>Jawwa</name>
 
@@ -13,28 +13,49 @@
 		<module>zk-atmosphere</module>
 		<module>zk-cleditor</module>
 		<module>zk-gritter</module>
+		<module>zk-rabbitmq</module>
 	</modules>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-		<atmosphere.version>0.8.4</atmosphere.version>
-		<guava.version>11.0.1</guava.version>
+		<atmosphere.version>0.8.5</atmosphere.version>
+		<guava.version>11.0.2</guava.version>
 		<javax.servlet.version>3.0.1</javax.servlet.version>
 		<junit.version>4.10</junit.version>
 		<lombok.version>0.10.8</lombok.version>
+		<rabbitmq.version>2.7.1</rabbitmq.version>
 		<scala.version>2.9.1</scala.version>
-		<slf4j.version>1.6.1</slf4j.version>
+		<slf4j.version>1.6.4</slf4j.version>
 		<specs2.version>1.7.1</specs2.version>
 		<zk.version>5.0.10</zk.version>
 
+		<maven.clean.version>2.4.1</maven.clean.version>
 		<maven.compiler.version>2.3.2</maven.compiler.version>
-		<maven.javadoc.version>2.8</maven.javadoc.version>
-		<maven.jrebel.version>1.1.3</maven.jrebel.version>
-		<maven.scala.version>2.15.2</maven.scala.version>
+		<maven.install.version>2.3.1</maven.install.version>
+		<maven.jar.version>2.4</maven.jar.version>
+		<maven.javadoc.version>2.8.1</maven.javadoc.version>
+		<maven.resources.version>2.5</maven.resources.version>
 		<maven.site.version>3.0</maven.site.version>
-		<maven.yuicompressor.version>1.2</maven.yuicompressor.version>
+		<maven.surefire.version>2.11</maven.surefire.version>
+
+		<maven.scala.version>2.15.2</maven.scala.version>
+		<maven.jrebel.version>1.1.3</maven.jrebel.version>
+		<maven.yuicompressor.version>1.3.0</maven.yuicompressor.version>
 	</properties>
+
+	<organization>
+		<name>Jawsy Solutions</name>
+		<url>http://jawsy.fi</url>
+	</organization>
+
+	<licenses>
+		<license>
+			<name>Apache 2</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
 
 	<distributionManagement>
 		<repository>
@@ -63,6 +84,11 @@
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-clean-plugin</artifactId>
+					<version>${maven.clean.version}</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>
 					<version>${maven.compiler.version}</version>
 					<configuration>
@@ -82,6 +108,31 @@
 							</goals>
 						</execution>
 					</executions>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-install-plugin</artifactId>
+					<version>${maven.install.version}</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-jar-plugin</artifactId>
+					<version>${maven.jar.version}</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-javadoc-plugin</artifactId>
+					<version>${maven.javadoc.version}</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-resources-plugin</artifactId>
+					<version>${maven.resources.version}</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<version>${maven.surefire.version}</version>
 				</plugin>
 				<plugin>
 					<groupId>org.zeroturnaround</groupId>
@@ -148,6 +199,11 @@
 				<groupId>com.google.guava</groupId>
 				<artifactId>guava</artifactId>
 				<version>${guava.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.rabbitmq</groupId>
+				<artifactId>amqp-client</artifactId>
+				<version>${rabbitmq.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>javax.servlet</groupId>

@@ -1,9 +1,23 @@
-jawwa
-=================
+Jawwa: Jawsy Solutions libraries for Java 1.6+
+==============================================
 
 ## Introduction
 
-Jawwa is a library project with many useful things for Java developers.
+Jawwa is a multi-module Java library project containing many useful things for Java developers.
+
+## Documentation
+
+### Reference manual
+
+The reference manual can be found here:
+
+[http://oss.jawsy.fi/docs/jawwa/0.2.0/](http://oss.jawsy.fi/docs/jawwa/0.2.0/)
+
+### Javadoc
+
+Aggregated Javadoc for all modules can be found here:
+
+[http://oss.jawsy.fi/api/jawwa/0.2.0/](http://oss.jawsy.fi/api/jawwa/0.2.0/)
 
 ## Modules
 
@@ -16,7 +30,7 @@ All modules are deployed in this Maven repository:
       <url>http://oss.jawsy.fi/maven2/releases/</url>
     </repository>
 
-### <a href="">jawwa-lang</a>
+### jawwa-lang
 
 General purpose Java utilities.
 
@@ -25,10 +39,10 @@ General purpose Java utilities.
     <dependency>
       <groupId>fi.jawsy.jawwa</groupId>
       <artifactId>jawwa-lang</artifactId>
-      <version>0.1.0-SNAPSHOT</version>
+      <version>0.2.0</version>
     </dependency>
 
-### <a href="">jawwa-zk-atmosphere</a>
+### jawwa-zk-atmosphere
 
 Asynchronous ZK server push implementation based on [Atmosphere](https://github.com/Atmosphere/atmosphere)
 
@@ -58,16 +72,20 @@ web.xml:
       <!-- Remove async-supported if you are not using Servlet 3.0 -->
       <async-supported>true</async-supported>
     </servlet>
+    <servlet-mapping>
+      <servlet-name>AtmosphereServlet</servlet-name>
+      <url-pattern>/zkau/comet</url-pattern>
+    </servlet-mapping>
 
 #### Maven dependency
 
     <dependency>
       <groupId>fi.jawsy.jawwa</groupId>
       <artifactId>jawwa-zk-atmosphere</artifactId>
-      <version>0.1.0-SNAPSHOT</version>
+      <version>0.2.0</version>
     </dependency>
 
-### <a href="">jawwa-zk-gritter</a>
+### jawwa-zk-gritter
 
 Growl-like notifications (uses [Gritter for jQuery](https://github.com/jboesch/Gritter))
 
@@ -76,10 +94,10 @@ Growl-like notifications (uses [Gritter for jQuery](https://github.com/jboesch/G
     <dependency>
       <groupId>fi.jawsy.jawwa</groupId>
       <artifactId>jawwa-zk-gritter</artifactId>
-      <version>0.1.0-SNAPSHOT</version>
+      <version>0.2.0</version>
     </dependency>
 
-### <a href="">jawwa-zk-cleditor</a>
+### jawwa-zk-cleditor
 
 Rich-text editor component based on [CLEditor](http://premiumsoftware.net/cleditor/).
 Uses [a custom version of CLEditor](https://github.com/Gekkio/cleditor) that makes the editor usable in dynamic websites.
@@ -89,5 +107,17 @@ Uses [a custom version of CLEditor](https://github.com/Gekkio/cleditor) that mak
     <dependency>
       <groupId>fi.jawsy.jawwa</groupId>
       <artifactId>jawwa-zk-cleditor</artifactId>
-      <version>0.1.0-SNAPSHOT</version>
+      <version>0.2.0</version>
+    </dependency>
+
+### jawwa-zk-rabbitmq
+
+Provides cluster-wide application event queue for ZK apps by using RabbitMQ.
+
+#### Maven dependency
+
+    <dependency>
+      <groupId>fi.jawsy.jawwa</groupId>
+      <artifactId>jawwa-zk-rabbitmq</artifactId>
+      <version>0.2.0</version>
     </dependency>
