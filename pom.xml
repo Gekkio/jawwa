@@ -20,7 +20,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
 		<atmosphere.version>0.8.5</atmosphere.version>
-		<guava.version>11.0.1</guava.version>
+		<guava.version>11.0.2</guava.version>
 		<javax.servlet.version>3.0.1</javax.servlet.version>
 		<junit.version>4.10</junit.version>
 		<lombok.version>0.10.8</lombok.version>
