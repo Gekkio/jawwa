@@ -109,3 +109,15 @@ Uses [a custom version of CLEditor](https://github.com/Gekkio/cleditor) that mak
       <artifactId>jawwa-zk-cleditor</artifactId>
       <version>0.2.0</version>
     </dependency>
+
+### jawwa-zk-rabbitmq
+
+Provides cluster-wide application event queue for ZK apps by using RabbitMQ.
+
+#### Maven dependency
+
+    <dependency>
+      <groupId>fi.jawsy.jawwa</groupId>
+      <artifactId>jawwa-zk-rabbitmq</artifactId>
+      <version>0.2.0</version>
+    </dependency>
