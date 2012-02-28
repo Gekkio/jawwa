@@ -2,7 +2,6 @@ package fi.jawsy.jawwa.zk.rabbitmq;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
@@ -29,7 +28,7 @@ public interface RabbitBridgeSerializer {
                 out.writeObject(event);
 
                 return byteOut.toByteArray();
-            } catch (IOException e) {
+            } catch (Exception e) {
                 throw new RabbitBridgeException("Serialization failure", e);
             }
         }

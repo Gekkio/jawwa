@@ -33,8 +33,8 @@ public class RabbitBridge {
     }
 
     public void clearConnection() {
+        lock.writeLock().lock();
         try {
-            lock.writeLock().lock();
             channel = null;
         } finally {
             lock.writeLock().unlock();
@@ -42,9 +42,8 @@ public class RabbitBridge {
     }
 
     public void setConnection(Connection connection) throws IOException {
+        lock.writeLock().lock();
         try {
-            lock.writeLock().lock();
-
             channel = connection.createChannel();
 
             channel.exchangeDeclare(exchangeName, "fanout", true);
@@ -62,8 +61,8 @@ public class RabbitBridge {
     }
 
     public void publish(Event event) throws IOException {
+        lock.readLock().lock();
         try {
-            lock.readLock().lock();
             if (channel == null)
                 throw new RabbitBridgeException("No AMQP channel");
             channel.basicPublish(exchangeName, routingKey, null, serializer.serialize(event));
@@ -73,8 +72,8 @@ public class RabbitBridge {
     }
 
     public void close() {
+        lock.writeLock().lock();
         try {
-            lock.writeLock().lock();
             if (channel != null)
                 channel.close();
             channel = null;
