@@ -8,3 +8,4 @@ ZK Modules
   cleditor/index
   gritter/index
   raphaeljs/index
+  rabbitmq/index
