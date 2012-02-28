@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>fi.jawsy.jawwa</groupId>
 		<artifactId>jawwa-parent</artifactId>
-		<version>0.2.0-SNAPSHOT</version>
+		<version>0.2.0</version>
 	</parent>
 
 	<artifactId>jawwa-zk-gritter</artifactId>
