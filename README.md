@@ -112,7 +112,7 @@ Growl-like notifications (uses [Gritter for jQuery](https://github.com/jboesch/G
 
 ### jawwa-zk-metrics
 
-Performance and statistical metrics for ZK (uses [Yammer Metrics](http://metrics.codahale.com)).
+Statistics and performance metrics for ZK (uses [Yammer Metrics](http://metrics.codahale.com)).
 
 #### Maven dependency
 
