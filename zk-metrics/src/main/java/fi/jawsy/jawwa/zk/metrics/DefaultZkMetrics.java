@@ -20,7 +20,7 @@ import com.yammer.metrics.core.MetricsRegistry;
  */
 public class DefaultZkMetrics extends ZkMetricsImpl implements WebAppInit, WebAppCleanup {
 
-    private static final String ATTRIBUTE_NAME = DefaultZkMetrics.class.getName();
+    static final String ATTRIBUTE_NAME = DefaultZkMetrics.class.getName();
 
     /**
      * Attempts to lookup a {@link ZkMetricsImpl} instance from the currently running ZK execution.
