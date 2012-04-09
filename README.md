@@ -110,6 +110,18 @@ Growl-like notifications (uses [Gritter for jQuery](https://github.com/jboesch/G
       <version>0.3.0</version>
     </dependency>
 
+### jawwa-zk-metrics
+
+Performance and statistical metrics for ZK (uses [Yammer Metrics](http://metrics.codahale.com)).
+
+#### Maven dependency
+
+    <dependency>
+      <groupId>fi.jawsy.jawwa</groupId>
+      <artifactId>jawwa-zk-metrics</artifactId>
+      <version>0.3.0</version>
+    </dependency>
+
 ### jawwa-zk-rabbitmq
 
 Provides cluster-wide application event queue for ZK apps by using RabbitMQ.
