@@ -13,8 +13,7 @@ public abstract class JsElement<S extends JsElement<S>> {
         private final Map<String, JsExpression> attrs = Maps.newLinkedHashMap();
 
         @Override
-        public String print() {
-            val sb = new StringBuilder();
+        public void print(StringBuilder sb) {
             sb.append(name);
             sb.append('.');
             sb.append("attr({");
@@ -24,12 +23,11 @@ public abstract class JsElement<S extends JsElement<S>> {
                 sb.append('"');
                 sb.append(entry.getKey());
                 sb.append("\":");
-                sb.append(entry.getValue().print());
+                entry.getValue().print(sb);
                 if (i.hasNext())
                     sb.append(',');
             }
             sb.append("})");
-            return sb.toString();
         }
 
     }
@@ -53,6 +51,58 @@ public abstract class JsElement<S extends JsElement<S>> {
         }
         attrStatement.attrs.put(attrName, attrValue);
         return me();
+    }
+
+    protected S attr(String attrName, final JsStringExpression attrValue) {
+        if (attrStatement == null) {
+            attrStatement = new AttrExpression();
+            paper.addStatement(attrStatement);
+        }
+        attrStatement.attrs.put(attrName, new JsExpression() {
+            @Override
+            public void print(StringBuilder sb) {
+                sb.append('\"');
+                attrValue.printInString(sb);
+                sb.append('\"');
+            }
+        });
+        return me();
+    }
+
+    public S cursor(JsString value) {
+        return attr("cursor", value);
+    }
+
+    public S cursor(String value) {
+        return attr("cursor", JsExp.wrap(value));
+    }
+
+    public S fill(JsColor color) {
+        return attr("fill", color);
+    }
+
+    public S fillOpacity(double value) {
+        return attr("fill-opacity", JsExp.wrap(value));
+    }
+
+    public S fillOpacity(int value) {
+        return attr("fill-opacity", JsExp.wrap(value));
+    }
+
+    public S fillOpacity(JsNumber value) {
+        return attr("fill-opacity", value);
+    }
+
+    public S opacity(double value) {
+        return attr("opacity", JsExp.wrap(value));
+    }
+
+    public S opacity(int value) {
+        return attr("opacity", JsExp.wrap(value));
+    }
+
+    public S opacity(JsNumber value) {
+        return attr("opacity", value);
     }
 
     public S stroke(JsColor color) {
@@ -95,16 +145,12 @@ public abstract class JsElement<S extends JsElement<S>> {
         return attr("stroke-width", value);
     }
 
-    public S opacity(double value) {
-        return attr("opacity", JsExp.wrap(value));
+    public S title(JsString value) {
+        return attr("title", value);
     }
 
-    public S opacity(int value) {
-        return attr("opacity", JsExp.wrap(value));
-    }
-
-    public S opacity(JsNumber value) {
-        return attr("opacity", value);
+    public S title(String value) {
+        return attr("title", JsExp.wrap(value));
     }
 
 }

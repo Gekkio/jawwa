@@ -25,13 +25,13 @@ public final class JsEllipse extends JsElement<JsEllipse> {
         sb.append(this.name);
         sb.append("=");
         sb.append("paper.ellipse(");
-        sb.append(x.print());
+        x.print(sb);
         sb.append(',');
-        sb.append(y.print());
+        y.print(sb);
         sb.append(',');
-        sb.append(rx.print());
+        rx.print(sb);
         sb.append(',');
-        sb.append(ry.print());
+        ry.print(sb);
         sb.append(')');
 
         paper.addStatement(JsExp.raw(sb.toString()));

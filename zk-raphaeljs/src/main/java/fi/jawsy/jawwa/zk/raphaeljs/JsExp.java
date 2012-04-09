@@ -1,5 +1,7 @@
 package fi.jawsy.jawwa.zk.raphaeljs;
 
+import lombok.val;
+
 import org.zkoss.json.JSONValue;
 
 import com.google.common.base.Function;
@@ -12,7 +14,9 @@ public final class JsExp {
     static final Function<JsExpression, String> PRINT = new Function<JsExpression, String>() {
         @Override
         public String apply(JsExpression input) {
-            return input.print();
+            val sb = new StringBuilder();
+            input.print(sb);
+            return sb.toString();
         }
     };
 
@@ -31,8 +35,8 @@ public final class JsExp {
     static JsExpression raw(final String value) {
         return new JsExpression() {
             @Override
-            public String print() {
-                return value;
+            public void print(StringBuilder sb) {
+                sb.append(value);
             }
         };
     }

@@ -13,8 +13,8 @@ public final class JsString implements JsExpression {
     private final String value;
 
     @Override
-    public String print() {
-        return JsExp.escape(value);
+    public void print(StringBuilder sb) {
+        sb.append(JsExp.escape(value));
     }
 
 }

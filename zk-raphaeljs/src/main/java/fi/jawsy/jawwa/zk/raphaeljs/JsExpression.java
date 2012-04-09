@@ -1,5 +1,7 @@
 package fi.jawsy.jawwa.zk.raphaeljs;
 
 interface JsExpression {
-    String print();
+
+    void print(StringBuilder sb);
+
 }

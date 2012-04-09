@@ -8,6 +8,8 @@ import lombok.val;
 
 public interface JsNumber extends JsExpression {
 
+    void printInString(StringBuilder sb);
+
     @RequiredArgsConstructor(access = AccessLevel.PACKAGE)
     @EqualsAndHashCode
     @ToString(includeFieldNames = false)
@@ -55,8 +57,13 @@ public interface JsNumber extends JsExpression {
         }
 
         @Override
-        public String print() {
-            return String.valueOf(value);
+        public void print(StringBuilder sb) {
+            sb.append(value);
+        }
+
+        @Override
+        public void printInString(StringBuilder sb) {
+            sb.append(value);
         }
     }
 
@@ -108,8 +115,13 @@ public interface JsNumber extends JsExpression {
         }
 
         @Override
-        public String print() {
-            return String.valueOf(value);
+        public void print(StringBuilder sb) {
+            sb.append(value);
+        }
+
+        @Override
+        public void printInString(StringBuilder sb) {
+            sb.append(value);
         }
     }
 
@@ -181,8 +193,15 @@ public interface JsNumber extends JsExpression {
         }
 
         @Override
-        public String print() {
-            return value;
+        public void print(StringBuilder sb) {
+            sb.append(value);
+        }
+
+        @Override
+        public void printInString(StringBuilder sb) {
+            sb.append("\"+");
+            print(sb);
+            sb.append("+\"");
         }
 
     }

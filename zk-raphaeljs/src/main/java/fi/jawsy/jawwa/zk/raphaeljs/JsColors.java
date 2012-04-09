@@ -4,6 +4,9 @@ import com.google.common.base.Preconditions;
 
 public final class JsColors {
 
+    private JsColors() {
+    }
+
     public static JsColor color(String value) {
         return new JsColor.Color(value);
     }

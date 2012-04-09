@@ -27,15 +27,15 @@ public final class JsRectangle extends JsElement<JsRectangle> {
         sb.append(this.name);
         sb.append("=");
         sb.append("paper.rect(");
-        sb.append(x.print());
+        x.print(sb);
         sb.append(',');
-        sb.append(y.print());
+        y.print(sb);
         sb.append(',');
-        sb.append(width.print());
+        width.print(sb);
         sb.append(',');
-        sb.append(height.print());
+        height.print(sb);
         sb.append(',');
-        sb.append(r.print());
+        r.print(sb);
         sb.append(')');
 
         paper.addStatement(JsExp.raw(sb.toString()));

@@ -23,11 +23,11 @@ public final class JsCircle extends JsElement<JsCircle> {
         sb.append(this.name);
         sb.append("=");
         sb.append("paper.circle(");
-        sb.append(x.print());
+        x.print(sb);
         sb.append(',');
-        sb.append(y.print());
+        y.print(sb);
         sb.append(',');
-        sb.append(r.print());
+        r.print(sb);
         sb.append(')');
 
         paper.addStatement(JsExp.raw(sb.toString()));

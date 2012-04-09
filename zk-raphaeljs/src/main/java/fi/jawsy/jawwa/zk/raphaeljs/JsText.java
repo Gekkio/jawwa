@@ -16,8 +16,8 @@ public final class JsText extends JsElement<JsText> {
         private final String value;
 
         @Override
-        public String print() {
-            return value;
+        public void print(StringBuilder sb) {
+            sb.append(value);
         }
     }
 
@@ -36,11 +36,11 @@ public final class JsText extends JsElement<JsText> {
         sb.append(this.name);
         sb.append("=");
         sb.append("paper.text(");
-        sb.append(x.print());
+        x.print(sb);
         sb.append(',');
-        sb.append(y.print());
+        y.print(sb);
         sb.append(',');
-        sb.append(text.print());
+        text.print(sb);
         sb.append(')');
 
         paper.addStatement(JsExp.raw(sb.toString()));

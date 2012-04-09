@@ -2,9 +2,8 @@ package fi.jawsy.jawwa.zk.raphaeljs;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import lombok.val;
 
-public interface JsColor extends JsExpression {
+public interface JsColor extends JsStringExpression {
 
     @RequiredArgsConstructor
     static class Color implements JsColor {
@@ -12,8 +11,8 @@ public interface JsColor extends JsExpression {
         private final String value;
 
         @Override
-        public String print() {
-            return JsExp.escape(value);
+        public void printInString(StringBuilder sb) {
+            sb.append(JsExp.escape(value));
         }
     }
 
@@ -25,16 +24,14 @@ public interface JsColor extends JsExpression {
         private final JsNumber b;
 
         @Override
-        public String print() {
-            val sb = new StringBuilder();
-            sb.append("\"rgb(");
-            sb.append(r.print());
+        public void printInString(StringBuilder sb) {
+            sb.append("rgb(");
+            r.printInString(sb);
             sb.append(',');
-            sb.append(g.print());
+            g.printInString(sb);
             sb.append(',');
-            sb.append(b.print());
+            b.printInString(sb);
             sb.append(")\"");
-            return sb.toString();
         }
 
     }
@@ -48,18 +45,16 @@ public interface JsColor extends JsExpression {
         private final JsNumber a;
 
         @Override
-        public String print() {
-            val sb = new StringBuilder();
-            sb.append("\"rgb(");
-            sb.append(r.print());
+        public void printInString(StringBuilder sb) {
+            sb.append("rgba(");
+            r.printInString(sb);
             sb.append(',');
-            sb.append(g.print());
+            g.printInString(sb);
             sb.append(',');
-            sb.append(b.print());
+            b.printInString(sb);
             sb.append(',');
-            sb.append(a.print());
-            sb.append(")\"");
-            return sb.toString();
+            a.printInString(sb);
+            sb.append(")");
         }
 
     }
@@ -67,21 +62,19 @@ public interface JsColor extends JsExpression {
     @RequiredArgsConstructor
     static class Hsb implements JsColor {
 
-        private final JsNumber r;
-        private final JsNumber g;
+        private final JsNumber h;
+        private final JsNumber s;
         private final JsNumber b;
 
         @Override
-        public String print() {
-            val sb = new StringBuilder();
-            sb.append("\"rgb(");
-            sb.append(r.print());
+        public void printInString(StringBuilder sb) {
+            sb.append("hsb(");
+            h.printInString(sb);
             sb.append(',');
-            sb.append(g.print());
+            s.printInString(sb);
             sb.append(',');
-            sb.append(b.print());
-            sb.append(")\"");
-            return sb.toString();
+            b.printInString(sb);
+            sb.append(")");
         }
 
     }
@@ -89,24 +82,22 @@ public interface JsColor extends JsExpression {
     @RequiredArgsConstructor
     static class Hsba implements JsColor {
 
-        private final JsNumber r;
-        private final JsNumber g;
+        private final JsNumber h;
+        private final JsNumber s;
         private final JsNumber b;
         private final JsNumber a;
 
         @Override
-        public String print() {
-            val sb = new StringBuilder();
-            sb.append("\"rgb(");
-            sb.append(r.print());
+        public void printInString(StringBuilder sb) {
+            sb.append("hsba(");
+            h.printInString(sb);
             sb.append(',');
-            sb.append(g.print());
+            s.printInString(sb);
             sb.append(',');
-            sb.append(b.print());
+            b.printInString(sb);
             sb.append(',');
-            sb.append(a.print());
-            sb.append(")\"");
-            return sb.toString();
+            a.printInString(sb);
+            sb.append(")");
         }
 
     }
@@ -114,21 +105,19 @@ public interface JsColor extends JsExpression {
     @RequiredArgsConstructor
     static class Hsl implements JsColor {
 
-        private final JsNumber r;
-        private final JsNumber g;
-        private final JsNumber b;
+        private final JsNumber h;
+        private final JsNumber s;
+        private final JsNumber l;
 
         @Override
-        public String print() {
-            val sb = new StringBuilder();
-            sb.append("\"rgb(");
-            sb.append(r.print());
+        public void printInString(StringBuilder sb) {
+            sb.append("hsl(");
+            h.printInString(sb);
             sb.append(',');
-            sb.append(g.print());
+            s.printInString(sb);
             sb.append(',');
-            sb.append(b.print());
-            sb.append(")\"");
-            return sb.toString();
+            l.printInString(sb);
+            sb.append(")");
         }
 
     }
@@ -136,24 +125,22 @@ public interface JsColor extends JsExpression {
     @RequiredArgsConstructor
     static class Hsla implements JsColor {
 
-        private final JsNumber r;
-        private final JsNumber g;
-        private final JsNumber b;
+        private final JsNumber h;
+        private final JsNumber s;
+        private final JsNumber l;
         private final JsNumber a;
 
         @Override
-        public String print() {
-            val sb = new StringBuilder();
-            sb.append("\"rgb(");
-            sb.append(r.print());
+        public void printInString(StringBuilder sb) {
+            sb.append("\"hsla(");
+            h.printInString(sb);
             sb.append(',');
-            sb.append(g.print());
+            s.printInString(sb);
             sb.append(',');
-            sb.append(b.print());
+            l.printInString(sb);
             sb.append(',');
-            sb.append(a.print());
+            a.printInString(sb);
             sb.append(")\"");
-            return sb.toString();
         }
 
     }
