@@ -7,5 +7,6 @@ ZK Modules
   atmosphere/index
   cleditor/index
   gritter/index
+  metrics/index
   raphaeljs/index
   rabbitmq/index
