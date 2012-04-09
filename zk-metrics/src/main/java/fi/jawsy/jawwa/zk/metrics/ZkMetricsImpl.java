@@ -127,12 +127,12 @@ public class ZkMetricsImpl implements ZkMetrics, Monitor, PerformanceMeter, Even
     @Override
     public Event beforePostEvent(Event event) {
         eventsPosted.mark();
-        activeEvents.inc();
         return event;
     }
 
     @Override
     public Event beforeProcessEvent(Event event) {
+        activeEvents.inc();
         activeEventsProcessing.put(event, System.currentTimeMillis());
         return event;
     }
@@ -140,7 +140,6 @@ public class ZkMetricsImpl implements ZkMetrics, Monitor, PerformanceMeter, Even
     @Override
     public Event beforeSendEvent(Event event) {
         eventsSent.mark();
-        activeEvents.inc();
         return event;
     }
 
