@@ -26,7 +26,7 @@ import fi.jawsy.jawwa.lang.Either;
 /**
  * Atmosphere handler that integrates Atmosphere with ZK server push.
  */
-public class ZkAtmosphereHandler implements AtmosphereHandler<HttpServletRequest, HttpServletResponse> {
+public class ZkAtmosphereHandler implements AtmosphereHandler {
 
     @Override
     public void destroy() {
@@ -43,7 +43,7 @@ public class ZkAtmosphereHandler implements AtmosphereHandler<HttpServletRequest
         return option(request.getParameter("dtid")).filter(not(isEmpty())).toRight("Could not find desktop id");
     }
 
-    private Either<String, AtmosphereServerPush> getServerPush(AtmosphereResource<HttpServletRequest, HttpServletResponse> resource) {
+    private Either<String, AtmosphereServerPush> getServerPush(AtmosphereResource resource) {
         val request = resource.getRequest();
 
         val sessionEither = getSession(resource, request);
@@ -82,12 +82,12 @@ public class ZkAtmosphereHandler implements AtmosphereHandler<HttpServletRequest
         return Either.left("Desktop does not implement DesktopCtrl");
     }
 
-    private Either<String, Session> getSession(AtmosphereResource<?, ?> resource, HttpServletRequest request) {
+    private Either<String, Session> getSession(AtmosphereResource resource, HttpServletRequest request) {
         return option(WebManager.getSession(resource.getAtmosphereConfig().getServletContext(), request, false)).toRight("Could not find session");
     }
 
     @Override
-    public void onRequest(AtmosphereResource<HttpServletRequest, HttpServletResponse> resource) throws IOException {
+    public void onRequest(AtmosphereResource resource) throws IOException {
         val response = resource.getResponse();
 
         response.setContentType("text/plain");
@@ -104,7 +104,7 @@ public class ZkAtmosphereHandler implements AtmosphereHandler<HttpServletRequest
     }
 
     @Override
-    public void onStateChange(AtmosphereResourceEvent<HttpServletRequest, HttpServletResponse> event) throws IOException {
+    public void onStateChange(AtmosphereResourceEvent event) throws IOException {
         val resource = event.getResource();
 
         if (event.isCancelled() || event.isResumedOnTimeout()) {

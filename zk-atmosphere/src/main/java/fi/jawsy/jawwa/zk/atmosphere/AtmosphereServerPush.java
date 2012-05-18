@@ -2,9 +2,6 @@ package fi.jawsy.jawwa.zk.atmosphere;
 
 import java.util.concurrent.atomic.AtomicReference;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import lombok.val;
 
 import org.atmosphere.cpr.AtmosphereResource;
@@ -38,7 +35,7 @@ public class AtmosphereServerPush implements ServerPush {
     private final AtomicReference<Desktop> desktop = new AtomicReference<Desktop>();
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
-    private final AtomicReference<AtmosphereResource<HttpServletRequest, HttpServletResponse>> resource = new AtomicReference<AtmosphereResource<HttpServletRequest, HttpServletResponse>>();
+    private final AtomicReference<AtmosphereResource> resource = new AtomicReference<AtmosphereResource>();
     private final int timeout;
 
     public AtmosphereServerPush() {
@@ -55,7 +52,7 @@ public class AtmosphereServerPush implements ServerPush {
         throw new UnsupportedOperationException("activate is not supported by AtmosphereServerPush");
     }
 
-    public void clearResource(AtmosphereResource<HttpServletRequest, HttpServletResponse> resource) {
+    public void clearResource(AtmosphereResource resource) {
         this.resource.compareAndSet(resource, null);
     }
 
@@ -118,7 +115,7 @@ public class AtmosphereServerPush implements ServerPush {
         commitResponse();
     }
 
-    public void updateResource(AtmosphereResource<HttpServletRequest, HttpServletResponse> resource) {
+    public void updateResource(AtmosphereResource resource) {
         commitResponse();
 
         boolean shouldSuspend = true;
