@@ -49,3 +49,11 @@ Available modules
   :maxdepth: 2
 
   zk/index
+
+Miscellaneous
+-------------
+
+.. toctree::
+  :maxdepth: 1
+  
+  misc/release-notes
