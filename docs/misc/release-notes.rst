@@ -4,6 +4,21 @@ Release Notes
 vX.X.X: xxx xx xxxx
 -------------------
 
+v0.4.0: May 25 2012
+-------------------
+* Upgraded to Atmosphere 0.9.4 (0.8.x is no longer supported!)
+* Upgraded to Guava 12.0
+* Upgraded to Metrics 2.1.2
+* Upgraded to Scala 2.9.2
+
+*Lang*
+
+* Feature: Custom base32 encoder based on Douglas Crockford's notation
+
+*ZK Atmosphere*
+
+* Feature: Switched from Atmosphere 0.8.x API -> 0.9.x
+
 *ZK Metrics*
 
 * Feature: Expose metrics directly to ZK applications
