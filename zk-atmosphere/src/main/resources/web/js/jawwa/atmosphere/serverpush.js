@@ -48,7 +48,7 @@
           dtid: this.desktop.id
         },
         accepts: "text/plain",
-        dataType: "text/plain",
+        dataType: "text",
         timeout: me.timeout,
         error: function(jqxhr, textStatus, errorThrown) {
           me.failures += 1;
