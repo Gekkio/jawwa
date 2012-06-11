@@ -48,9 +48,12 @@
           dtid: this.desktop.id
         },
         accepts: "text/plain",
-        dataType: "text/plain",
+        dataType: "text",
         timeout: me.timeout,
         error: function(jqxhr, textStatus, errorThrown) {
+          if (typeof console == "object") {
+            console.error(errorThrown);
+          }
           me.failures += 1;
           me._schedule();
         },

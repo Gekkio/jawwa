@@ -5,7 +5,6 @@ import java.util.Arrays;
 import lombok.val;
 
 import com.google.common.base.Preconditions;
-import com.google.common.primitives.Longs;
 
 public final class Base32Crockford {
 
@@ -46,16 +45,7 @@ public final class Base32Crockford {
 
         while (currentBit < totalBits) {
             val index = currentBit / 8;
-            int source;
-            if (index < data.length) {
-                byte b = data[index];
-                if (b >= 0)
-                    source = b;
-                else
-                    source = b + 256;
-            } else {
-                source = 0;
-            }
+            int source = (index < data.length) ? (data[index] & 0xFF) : 0;
             val maxSourceBit = (index + 1) * 8;
 
             val bitsAvailable = maxSourceBit - currentBit;
@@ -123,5 +113,45 @@ public final class Base32Crockford {
         }
         return result;
     }
-    
+
+    public static int decodeInt(String data) {
+        val bytes = decode(data);
+        int result = 0;
+        for (int i = 0; i < bytes.length; i++) {
+            val b = bytes[i] & 0xFF;
+            result |= (b << ((bytes.length - i - 1) * 8));
+        }
+        return result;
+    }
+
+    public static long decodeLong(String data) {
+        val bytes = decode(data);
+        long result = 0;
+        for (int i = 0; i < bytes.length; i++) {
+            val b = bytes[i] & 0xFFL;
+            result |= (b << ((bytes.length - i - 1) * 8));
+        }
+        return result;
+    }
+
+    public static String encodeInt(int value) {
+        val significantBits = (Integer.SIZE - Integer.numberOfLeadingZeros(value));
+        val significantBytes = (int) Math.ceil(significantBits / 8.0);
+        val bytes = new byte[significantBytes];
+        for (int i = (significantBytes - 1); i >= 0; i--) {
+            bytes[significantBytes - i - 1] = (byte) (value >> (i * 8));
+        }
+        return encode(bytes);
+    }
+
+    public static String encodeLong(long value) {
+        val significantBits = (Long.SIZE - Long.numberOfLeadingZeros(value));
+        val significantBytes = (int) Math.ceil(significantBits / 8.0);
+        val bytes = new byte[significantBytes];
+        for (int i = (significantBytes - 1); i >= 0; i--) {
+            bytes[significantBytes - i - 1] = (byte) (value >> (i * 8));
+        }
+        return encode(bytes);
+    }
+
 }
