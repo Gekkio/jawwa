@@ -11,13 +11,13 @@ Jawwa is a multi-module Java library project containing many useful things for J
 
 The reference manual can be found here:
 
-[http://oss.jawsy.fi/docs/jawwa/0.4.0/](http://oss.jawsy.fi/docs/jawwa/0.4.0/)
+[http://oss.jawsy.fi/docs/jawwa/0.4.1/](http://oss.jawsy.fi/docs/jawwa/0.4.1/)
 
 ### Javadoc
 
 Aggregated Javadoc for all modules can be found here:
 
-[http://oss.jawsy.fi/api/jawwa/0.4.0/](http://oss.jawsy.fi/api/jawwa/0.4.0/)
+[http://oss.jawsy.fi/api/jawwa/0.4.1/](http://oss.jawsy.fi/api/jawwa/0.4.1/)
 
 ## Modules
 
@@ -39,7 +39,7 @@ General purpose Java utilities.
     <dependency>
       <groupId>fi.jawsy.jawwa</groupId>
       <artifactId>jawwa-lang</artifactId>
-      <version>0.4.0</version>
+      <version>0.4.1</version>
     </dependency>
 
 ### jawwa-zk-atmosphere
@@ -82,7 +82,7 @@ web.xml:
     <dependency>
       <groupId>fi.jawsy.jawwa</groupId>
       <artifactId>jawwa-zk-atmosphere</artifactId>
-      <version>0.4.0</version>
+      <version>0.4.1</version>
     </dependency>
 
 ### jawwa-zk-cleditor
@@ -95,7 +95,7 @@ Uses [a custom version of CLEditor](https://github.com/Gekkio/cleditor) that mak
     <dependency>
       <groupId>fi.jawsy.jawwa</groupId>
       <artifactId>jawwa-zk-cleditor</artifactId>
-      <version>0.4.0</version>
+      <version>0.4.1</version>
     </dependency>
 
 ### jawwa-zk-gritter
@@ -107,7 +107,7 @@ Growl-like notifications (uses [Gritter for jQuery](https://github.com/jboesch/G
     <dependency>
       <groupId>fi.jawsy.jawwa</groupId>
       <artifactId>jawwa-zk-gritter</artifactId>
-      <version>0.4.0</version>
+      <version>0.4.1</version>
     </dependency>
 
 ### jawwa-zk-metrics
@@ -119,7 +119,7 @@ Statistics and performance metrics for ZK (uses [Yammer Metrics](http://metrics.
     <dependency>
       <groupId>fi.jawsy.jawwa</groupId>
       <artifactId>jawwa-zk-metrics</artifactId>
-      <version>0.4.0</version>
+      <version>0.4.1</version>
     </dependency>
 
 ### jawwa-zk-rabbitmq
@@ -131,5 +131,5 @@ Provides cluster-wide application event queue for ZK apps by using RabbitMQ.
     <dependency>
       <groupId>fi.jawsy.jawwa</groupId>
       <artifactId>jawwa-zk-rabbitmq</artifactId>
-      <version>0.4.0</version>
+      <version>0.4.1</version>
     </dependency>

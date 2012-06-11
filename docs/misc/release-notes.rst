@@ -4,6 +4,19 @@ Release Notes
 vX.X.X: xxx xx xxxx
 -------------------
 
+v0.4.1: Jun 11 2012
+-------------------
+* Upgraded to Atmosphere 0.9.5
+* Upgraded to SLF4J 1.6.6
+
+*Lang*
+
+* Feature: Compact base32 representations for ints and longs
+
+*ZK Atmosphere*
+
+* Bug: Invalid dataType in server push AJAX requests (ZK6 compatibility)
+
 v0.4.0: May 25 2012
 -------------------
 * Upgraded to Atmosphere 0.9.4 (0.8.x is no longer supported!)
