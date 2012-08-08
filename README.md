@@ -122,14 +122,3 @@ Statistics and performance metrics for ZK (uses [Yammer Metrics](http://metrics.
       <version>0.4.1</version>
     </dependency>
 
-### jawwa-zk-rabbitmq
-
-Provides cluster-wide application event queue for ZK apps by using RabbitMQ.
-
-#### Maven dependency
-
-    <dependency>
-      <groupId>fi.jawsy.jawwa</groupId>
-      <artifactId>jawwa-zk-rabbitmq</artifactId>
-      <version>0.4.1</version>
-    </dependency>

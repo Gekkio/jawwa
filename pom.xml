@@ -14,7 +14,6 @@
 		<module>zk-cleditor</module>
 		<module>zk-gritter</module>
 		<module>zk-metrics</module>
-		<module>zk-rabbitmq</module>
 	</modules>
 
 	<properties>
@@ -27,7 +26,6 @@
 		<lombok.version>0.11.2</lombok.version>
 		<metrics.version>2.1.3</metrics.version>
 		<mockito.version>1.9.0</mockito.version>
-		<rabbitmq.version>2.7.1</rabbitmq.version>
 		<scala.version>2.9.2</scala.version>
 		<scalacheck.version>1.10.0</scalacheck.version>
 		<slf4j.version>1.6.6</slf4j.version>
@@ -213,11 +211,6 @@
 				<groupId>com.google.guava</groupId>
 				<artifactId>guava</artifactId>
 				<version>${guava.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.rabbitmq</groupId>
-				<artifactId>amqp-client</artifactId>
-				<version>${rabbitmq.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>com.yammer.metrics</groupId>

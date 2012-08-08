@@ -9,4 +9,3 @@ ZK Modules
   gritter/index
   metrics/index
   raphaeljs/index
-  rabbitmq/index
