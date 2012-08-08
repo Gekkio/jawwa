@@ -78,14 +78,9 @@ public class AtmosphereServerPush implements ServerPush {
     }
 
     @Override
-    public void schedule(EventListener task, Event event, Scheduler scheduler) {
+    public <T extends Event> void schedule(EventListener<T> task, T event, Scheduler<T> scheduler) {
         scheduler.schedule(task, event);
         commitResponse();
-    }
-
-    @Override
-    public void setDelay(int min, int max, int factor) {
-        throw new UnsupportedOperationException("setDelay is not supported by AtmosphereServerPush");
     }
 
     @Override
