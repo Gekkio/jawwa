@@ -31,7 +31,7 @@
 		<scala.version>2.9.2</scala.version>
 		<scalacheck.version>1.9</scalacheck.version>
 		<slf4j.version>1.6.6</slf4j.version>
-		<specs2.version>1.11</specs2.version>
+		<specs2.version>1.12</specs2.version>
 		<zk.version>6.0.2</zk.version>
 
 		<maven.clean.version>2.5</maven.clean.version>
