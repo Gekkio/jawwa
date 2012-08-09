@@ -1,6 +1,7 @@
 *.swp
 *~
 .classpath
+.factorypath
 .history
 .manager
 .project

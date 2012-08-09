@@ -9,9 +9,11 @@
 	<name>Jawwa</name>
 
 	<modules>
+		<module>frp</module>
 		<module>lang</module>
 		<module>zk-atmosphere</module>
 		<module>zk-cleditor</module>
+		<module>zk-frp</module>
 		<module>zk-gritter</module>
 		<module>zk-metrics</module>
 	</modules>
@@ -201,6 +203,11 @@
 	<dependencyManagement>
 		<dependencies>
 			<!-- *** Internal dependencies *** -->
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>jawwa-frp</artifactId>
+				<version>${project.version}</version>
+			</dependency>
 			<dependency>
 				<groupId>${project.groupId}</groupId>
 				<artifactId>jawwa-lang</artifactId>
