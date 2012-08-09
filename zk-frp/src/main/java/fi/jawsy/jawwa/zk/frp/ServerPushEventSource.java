@@ -14,10 +14,12 @@ import org.zkoss.zk.ui.event.EventListener;
 import com.google.common.collect.Sets;
 
 import fi.jawsy.jawwa.frp.CleanupHandle;
+import fi.jawsy.jawwa.frp.EventSink;
+import fi.jawsy.jawwa.frp.EventStream;
 import fi.jawsy.jawwa.frp.EventStreamBase;
 import fi.jawsy.jawwa.lang.Effect;
 
-public class ServerPushEventSource<E> extends EventStreamBase<E> {
+public class ServerPushEventSource<E> extends EventStreamBase<E> implements EventSink<E> {
 
     private static final long serialVersionUID = -9056310527499308343L;
 
@@ -76,9 +78,23 @@ public class ServerPushEventSource<E> extends EventStreamBase<E> {
         return new ServerPushCleanup();
     }
 
+    @Override
     public void fire(E event) {
         if (hasListeners.get())
             Executions.schedule(desktop, listener, new ServerPushEvent<E>(event));
+    }
+
+    @Override
+    public CleanupHandle consume(EventStream<? extends E> es) {
+        class FireEvent implements Effect<E>, Serializable {
+            private static final long serialVersionUID = -6329853533953354977L;
+
+            @Override
+            public void apply(E input) {
+                fire(input);
+            }
+        }
+        return es.foreach(new FireEvent());
     }
 
 }

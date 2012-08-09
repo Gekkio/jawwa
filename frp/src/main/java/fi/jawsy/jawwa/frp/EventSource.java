@@ -7,7 +7,7 @@ import com.google.common.collect.Sets;
 
 import fi.jawsy.jawwa.lang.Effect;
 
-public class EventSource<E> extends EventStreamBase<E> implements StreamConsumer<E> {
+public class EventSource<E> extends EventStreamBase<E> implements EventSink<E> {
 
     private static final long serialVersionUID = -2046636095523847664L;
 
@@ -31,6 +31,7 @@ public class EventSource<E> extends EventStreamBase<E> implements StreamConsumer
         return new EventSource<E>();
     }
 
+    @Override
     public CleanupHandle consume(EventStream<? extends E> es) {
         class FireEvent implements Effect<E>, Serializable {
             private static final long serialVersionUID = -2885119782485225579L;
@@ -43,6 +44,7 @@ public class EventSource<E> extends EventStreamBase<E> implements StreamConsumer
         return es.foreach(new FireEvent());
     }
 
+    @Override
     public void fire(E event) {
         for (Effect<? super E> listener : listeners) {
             listener.apply(event);

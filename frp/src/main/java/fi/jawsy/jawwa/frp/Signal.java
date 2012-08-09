@@ -28,7 +28,7 @@ public interface Signal<T> {
 
     }
 
-    public static class Var<T> implements Signal<T>, StreamConsumer<T> {
+    public static class Var<T> implements Signal<T>, EventSink<T> {
         private final AtomicReference<T> value;
         private final EventSource<T> eventSource = new EventSource<T>();
 
@@ -46,6 +46,7 @@ public interface Signal<T> {
             return eventSource;
         }
 
+        @Override
         public CleanupHandle consume(EventStream<? extends T> es) {
             return es.foreach(new Effect<T>() {
                 @Override
@@ -53,6 +54,11 @@ public interface Signal<T> {
                     update(input);
                 }
             });
+        }
+
+        @Override
+        public void fire(T value) {
+            update(value);
         }
 
         public void update(T value) {
