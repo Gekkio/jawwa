@@ -191,10 +191,6 @@
 
 	<repositories>
 		<repository>
-			<id>scalatools-releases</id>
-			<url>http://www.scala-tools.org/repo-releases</url>
-		</repository>
-		<repository>
 			<id>zk</id>
 			<url>http://mavensync.zkoss.org/maven2</url>
 		</repository>
