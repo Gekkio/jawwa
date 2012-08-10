@@ -2,6 +2,9 @@ package fi.jawsy.jawwa.frp;
 
 import java.io.ObjectStreamException;
 import java.io.Serializable;
+import java.util.concurrent.atomic.AtomicReference;
+
+import lombok.val;
 
 public final class CleanupHandles {
 
@@ -31,6 +34,37 @@ public final class CleanupHandles {
             public void cleanup() {
                 first.cleanup();
                 second.cleanup();
+            }
+        }
+        return new MergedCleanupHandle();
+    }
+
+    public static CleanupHandle atomic(final AtomicReference<CleanupHandle> handle) {
+        class AtomicCleanupHandle implements CleanupHandle, Serializable {
+            private static final long serialVersionUID = -1372846716767019191L;
+
+            @Override
+            public void cleanup() {
+                val h = handle.get();
+                if (h != null)
+                    h.cleanup();
+            }
+        }
+        return new AtomicCleanupHandle();
+    }
+
+    public static CleanupHandle merge(final AtomicReference<CleanupHandle> first, final AtomicReference<CleanupHandle> second) {
+        class MergedCleanupHandle implements CleanupHandle, Serializable {
+            private static final long serialVersionUID = 2437793808752492821L;
+
+            @Override
+            public void cleanup() {
+                val fh = first.get();
+                if (fh != null)
+                    fh.cleanup();
+                val sh = second.get();
+                if (sh != null)
+                    sh.cleanup();
             }
         }
         return new MergedCleanupHandle();

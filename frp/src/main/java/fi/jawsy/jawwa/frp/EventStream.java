@@ -19,6 +19,14 @@ public interface EventStream<T> {
 
     EventStream<T> distinct();
 
+    EventStream<T> drop(int amount);
+
+    EventStream<T> dropUntil(EventStream<?> es);
+
+    EventStream<T> take(int amount);
+
+    EventStream<T> takeUntil(EventStream<?> es);
+
     Signal<T> hold(T initial);
 
 }
