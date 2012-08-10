@@ -27,6 +27,8 @@ public interface EventStream<T> {
 
     EventStream<T> takeUntil(EventStream<?> es);
 
+    EventStream<T> synchronize();
+
     Signal<T> hold(T initial);
 
 }

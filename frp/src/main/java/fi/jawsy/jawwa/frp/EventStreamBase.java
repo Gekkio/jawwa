@@ -304,4 +304,30 @@ public abstract class EventStreamBase<E> implements EventStream<E>, Serializable
         return new TakeUntilEventStream();
     }
 
+    @Override
+    public EventStream<E> synchronize() {
+        class SynchronizedEventStream extends EventStreamBase<E> {
+            private static final long serialVersionUID = -8492933126353306230L;
+
+            private final Object lock = new Object();
+
+            @Override
+            public CleanupHandle foreach(final Effect<? super E> e) {
+                class SynchronizedEffect implements Effect<E>, Serializable {
+                    private static final long serialVersionUID = 3131604565473738487L;
+
+                    @Override
+                    public void apply(E input) {
+                        synchronized (lock) {
+                            e.apply(input);
+                        }
+                    }
+                }
+
+                return EventStreamBase.this.foreach(new SynchronizedEffect());
+            }
+        }
+        return new SynchronizedEventStream();
+    }
+
 }
