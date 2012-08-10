@@ -1,6 +1,7 @@
 package fi.jawsy.jawwa.frp;
 
 import java.io.Serializable;
+import java.util.concurrent.Executor;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
@@ -328,6 +329,34 @@ public abstract class EventStreamBase<E> implements EventStream<E>, Serializable
             }
         }
         return new SynchronizedEventStream();
+    }
+
+    @Override
+    public EventStream<E> asynchronous(final Executor executor) {
+        class AsynchronousEventStream extends EventStreamBase<E> {
+            private static final long serialVersionUID = 7220127200602223002L;
+
+            @Override
+            public CleanupHandle foreach(final Effect<? super E> e) {
+                class AsynchronousEffect implements Effect<E>, Serializable {
+                    private static final long serialVersionUID = 4797805764789744272L;
+
+                    @Override
+                    public void apply(final E input) {
+                        executor.execute(new Runnable() {
+                            @Override
+                            public void run() {
+                                e.apply(input);
+                            }
+                        });
+                    }
+
+                }
+                return EventStreamBase.this.foreach(new AsynchronousEffect());
+            }
+
+        }
+        return new AsynchronousEventStream();
     }
 
 }

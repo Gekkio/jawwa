@@ -1,5 +1,7 @@
 package fi.jawsy.jawwa.frp;
 
+import java.util.concurrent.Executor;
+
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 
@@ -28,6 +30,8 @@ public interface EventStream<T> {
     EventStream<T> takeUntil(EventStream<?> es);
 
     EventStream<T> synchronize();
+
+    EventStream<T> asynchronous(Executor executor);
 
     Signal<T> hold(T initial);
 
