@@ -1,5 +1,6 @@
 package fi.jawsy.jawwa.frp;
 
+import java.io.ObjectStreamException;
 import java.io.Serializable;
 
 public final class CleanupHandles {
@@ -13,6 +14,11 @@ public final class CleanupHandles {
         @Override
         public void cleanup() {
         }
+
+        private Object readResolve() throws ObjectStreamException {
+            return NOOP;
+        }
+
     }
 
     public static final CleanupHandle NOOP = new NoopCleanupHandle();
