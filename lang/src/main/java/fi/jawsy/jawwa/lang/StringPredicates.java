@@ -21,7 +21,7 @@ public final class StringPredicates {
         }
     }
 
-    private static IsEmptyPredicate IS_EMPTY = new IsEmptyPredicate();
+    private static final IsEmptyPredicate IS_EMPTY = new IsEmptyPredicate();
 
     public static Predicate<? super String> isEmpty() {
         return IS_EMPTY;
