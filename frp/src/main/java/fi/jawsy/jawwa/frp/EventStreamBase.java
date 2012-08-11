@@ -6,8 +6,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
-import lombok.val;
-
 import com.google.common.base.Function;
 import com.google.common.base.Objects;
 import com.google.common.base.Predicate;
@@ -69,7 +67,7 @@ public abstract class EventStreamBase<E> implements EventStream<E>, Serializable
 
             @Override
             public CleanupHandle foreach(final Effect<? super U> e) {
-                val inner = new AtomicReference<CleanupHandle>();
+                final AtomicReference<CleanupHandle> inner = new AtomicReference<CleanupHandle>();
 
                 class FlatMapEffect implements Effect<E>, Serializable {
                     private static final long serialVersionUID = -3177496251373686951L;
@@ -212,7 +210,7 @@ public abstract class EventStreamBase<E> implements EventStream<E>, Serializable
 
             @Override
             public CleanupHandle foreach(final Effect<? super E> e) {
-                val gateHandle = new AtomicReference<CleanupHandle>(CleanupHandles.NOOP);
+                final AtomicReference<CleanupHandle> gateHandle = new AtomicReference<CleanupHandle>(CleanupHandles.NOOP);
 
                 class DropUntilGateEffect implements Effect<Object>, Serializable {
                     private static final long serialVersionUID = 2741111517742942539L;
@@ -220,7 +218,7 @@ public abstract class EventStreamBase<E> implements EventStream<E>, Serializable
                     @Override
                     public void apply(Object input) {
                         if (active.compareAndSet(false, true)) {
-                            val old = gateHandle.getAndSet(null);
+                            CleanupHandle old = gateHandle.getAndSet(null);
                             if (old != null)
                                 old.cleanup();
                         }
@@ -239,7 +237,7 @@ public abstract class EventStreamBase<E> implements EventStream<E>, Serializable
 
                 }
 
-                val gate = es.foreach(new DropUntilGateEffect());
+                CleanupHandle gate = es.foreach(new DropUntilGateEffect());
 
                 if (!gateHandle.compareAndSet(CleanupHandles.NOOP, gate))
                     gate.cleanup();
@@ -260,8 +258,8 @@ public abstract class EventStreamBase<E> implements EventStream<E>, Serializable
 
             @Override
             public CleanupHandle foreach(final Effect<? super E> e) {
-                val gateHandle = new AtomicReference<CleanupHandle>();
-                val handle = new AtomicReference<CleanupHandle>();
+                final AtomicReference<CleanupHandle> gateHandle = new AtomicReference<CleanupHandle>();
+                final AtomicReference<CleanupHandle> handle = new AtomicReference<CleanupHandle>();
 
                 class TakeUntilGateEffect implements Effect<Object>, Serializable {
                     private static final long serialVersionUID = 2102835224218414042L;
@@ -269,10 +267,10 @@ public abstract class EventStreamBase<E> implements EventStream<E>, Serializable
                     @Override
                     public void apply(Object input) {
                         if (finished.compareAndSet(false, true)) {
-                            val oldGate = gateHandle.getAndSet(null);
+                            CleanupHandle oldGate = gateHandle.getAndSet(null);
                             if (oldGate != null)
                                 oldGate.cleanup();
-                            val old = handle.getAndSet(null);
+                            CleanupHandle old = handle.getAndSet(null);
                             if (old != null)
                                 old.cleanup();
                         }
@@ -290,11 +288,11 @@ public abstract class EventStreamBase<E> implements EventStream<E>, Serializable
                     }
                 }
 
-                val oldGate = gateHandle.getAndSet(es.foreach(new TakeUntilGateEffect()));
+                CleanupHandle oldGate = gateHandle.getAndSet(es.foreach(new TakeUntilGateEffect()));
                 if (oldGate != null)
                     oldGate.cleanup();
 
-                val old = handle.getAndSet(EventStreamBase.this.foreach(new TakeUntilEffect()));
+                CleanupHandle old = handle.getAndSet(EventStreamBase.this.foreach(new TakeUntilEffect()));
                 if (old != null)
                     old.cleanup();
 
