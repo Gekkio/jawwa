@@ -11,6 +11,7 @@
 	<modules>
 		<module>frp</module>
 		<module>lang</module>
+		<module>zk</module>
 		<module>zk-atmosphere</module>
 		<module>zk-cleditor</module>
 		<module>zk-frp</module>
