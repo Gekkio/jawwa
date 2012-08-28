@@ -46,4 +46,24 @@ public final class EventStreams {
         return new UnionEventStream();
     }
 
+    @SuppressWarnings("rawtypes")
+    public static <T> EventStream<T> unionUnchecked(final EventStream... streams) {
+        class UnionEventStream extends EventStreamBase<T> {
+            private static final long serialVersionUID = 6444352894945226672L;
+
+            @SuppressWarnings("unchecked")
+            @Override
+            public CleanupHandle foreach(Effect<? super T> e) {
+                CleanupHandle[] handles = new CleanupHandle[streams.length];
+
+                for (int i = 0; i < streams.length; i++) {
+                    handles[i] = streams[i].foreach(e);
+                }
+
+                return CleanupHandles.merge(handles);
+            }
+        }
+        return new UnionEventStream();
+    }
+
 }

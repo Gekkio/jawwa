@@ -39,6 +39,20 @@ public final class CleanupHandles {
         return new MergedCleanupHandle();
     }
 
+    public static CleanupHandle merge(final CleanupHandle... handles) {
+        class MergedCleanupHandle implements CleanupHandle, Serializable {
+            private static final long serialVersionUID = 3330087040400383817L;
+
+            @Override
+            public void cleanup() {
+                for (CleanupHandle handle : handles) {
+                    handle.cleanup();
+                }
+            }
+        }
+        return new MergedCleanupHandle();
+    }
+
     public static CleanupHandle atomic(final AtomicReference<CleanupHandle> handle) {
         class AtomicCleanupHandle implements CleanupHandle, Serializable {
             private static final long serialVersionUID = -1372846716767019191L;
