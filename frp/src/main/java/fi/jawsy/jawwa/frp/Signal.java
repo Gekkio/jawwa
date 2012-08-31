@@ -26,6 +26,10 @@ public interface Signal<T> {
             return EventStreams.empty();
         }
 
+        public static <T> Signal.Val<T> create(T value) {
+            return new Signal.Val<T>(value);
+        }
+
     }
 
     public static class Var<T> implements Signal<T>, EventSink<T> {
@@ -64,6 +68,10 @@ public interface Signal<T> {
         public void update(T value) {
             this.value.set(value);
             eventSource.fire(value);
+        }
+
+        public static <T> Signal.Var<T> create(T initial) {
+            return new Signal.Var<T>(initial);
         }
 
     }
