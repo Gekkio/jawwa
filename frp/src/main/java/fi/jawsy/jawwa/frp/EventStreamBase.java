@@ -357,4 +357,38 @@ public abstract class EventStreamBase<E> implements EventStream<E>, Serializable
         return new AsynchronousEventStream();
     }
 
+    @Override
+    public EventStream<E> takeWhile(final Predicate<? super E> p) {
+        class TakeWhileEventStream extends EventStreamBase<E> {
+
+            private static final long serialVersionUID = -6796045368801928080L;
+
+            @Override
+            public CleanupHandle foreach(final Effect<? super E> e) {
+                final AtomicReference<CleanupHandle> handle = new AtomicReference<CleanupHandle>();
+
+                class TakeWhileEffect implements Effect<E>, Serializable {
+                    private static final long serialVersionUID = -7795789919137505152L;
+
+                    @Override
+                    public void apply(E input) {
+                        if (p.apply(input)) {
+                            e.apply(input);
+                        } else {
+                            CleanupHandle h = handle.getAndSet(null);
+                            if (h != null)
+                                h.cleanup();
+                        }
+                    }
+                }
+
+                handle.set(EventStreamBase.this.foreach(new TakeWhileEffect()));
+
+                return CleanupHandles.atomic(handle);
+            }
+
+        }
+        return new TakeWhileEventStream();
+    }
+
 }

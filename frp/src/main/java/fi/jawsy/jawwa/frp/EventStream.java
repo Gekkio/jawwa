@@ -29,6 +29,8 @@ public interface EventStream<T> {
 
     EventStream<T> takeUntil(EventStream<?> es);
 
+    EventStream<T> takeWhile(Predicate<? super T> p);
+
     EventStream<T> synchronize();
 
     EventStream<T> asynchronous(Executor executor);
