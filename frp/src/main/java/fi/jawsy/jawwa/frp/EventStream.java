@@ -4,6 +4,7 @@ import java.util.concurrent.Executor;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
+import com.google.common.base.Supplier;
 
 import fi.jawsy.jawwa.lang.Effect;
 
@@ -12,6 +13,10 @@ public interface EventStream<T> {
     CleanupHandle foreach(Effect<? super T> e);
 
     <U> EventStream<U> map(Function<? super T, U> f);
+
+    <U> EventStream<U> map(U constant);
+
+    <U> EventStream<U> map(Supplier<U> s);
 
     <U> EventStream<U> flatMap(Function<? super T, EventStream<U>> f);
 

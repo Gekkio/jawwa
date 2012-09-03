@@ -7,8 +7,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 import com.google.common.base.Function;
+import com.google.common.base.Functions;
 import com.google.common.base.Objects;
 import com.google.common.base.Predicate;
+import com.google.common.base.Supplier;
 
 import fi.jawsy.jawwa.lang.Effect;
 
@@ -35,6 +37,16 @@ public abstract class EventStreamBase<E> implements EventStream<E>, Serializable
             }
         }
         return new MappedEventStream();
+    }
+
+    @Override
+    public <U> EventStream<U> map(U constant) {
+        return map(Functions.constant(constant));
+    }
+
+    @Override
+    public <U> EventStream<U> map(Supplier<U> s) {
+        return map(Functions.forSupplier(s));
     }
 
     @Override
