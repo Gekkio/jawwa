@@ -35,6 +35,8 @@ public interface EventStream<T> {
 
     EventStream<T> asynchronous(Executor executor);
 
+    CleanupHandle pipeTo(EventSink<? super T> sink);
+
     Signal<T> hold(T initial);
 
 }

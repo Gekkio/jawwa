@@ -51,7 +51,7 @@ public class EventSource<E> extends EventStreamBase<E> implements EventSink<E> {
     }
 
     @Override
-    public CleanupHandle consume(EventStream<? extends E> es) {
+    public CleanupHandle pipeFrom(EventStream<? extends E> es) {
         class FireEvent implements Effect<E>, Serializable {
             private static final long serialVersionUID = -2885119782485225579L;
 

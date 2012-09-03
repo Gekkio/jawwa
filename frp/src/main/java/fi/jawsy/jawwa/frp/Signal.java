@@ -51,7 +51,7 @@ public interface Signal<T> {
         }
 
         @Override
-        public CleanupHandle consume(EventStream<? extends T> es) {
+        public CleanupHandle pipeFrom(EventStream<? extends T> es) {
             return es.foreach(new Effect<T>() {
                 @Override
                 public void apply(T input) {

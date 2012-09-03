@@ -4,6 +4,6 @@ public interface EventSink<T> {
 
     void fire(T event);
 
-    CleanupHandle consume(EventStream<? extends T> es);
+    CleanupHandle pipeFrom(EventStream<? extends T> es);
 
 }

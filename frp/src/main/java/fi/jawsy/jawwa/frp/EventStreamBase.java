@@ -134,7 +134,7 @@ public abstract class EventStreamBase<E> implements EventStream<E>, Serializable
     @Override
     public Signal<E> hold(E initial) {
         final Signal.Var<E> s = new Signal.Var<E>(initial);
-        s.consume(this);
+        s.pipeFrom(this);
         return s;
     }
 
@@ -389,6 +389,11 @@ public abstract class EventStreamBase<E> implements EventStream<E>, Serializable
 
         }
         return new TakeWhileEventStream();
+    }
+
+    @Override
+    public CleanupHandle pipeTo(EventSink<? super E> sink) {
+        return sink.pipeFrom(this);
     }
 
 }
