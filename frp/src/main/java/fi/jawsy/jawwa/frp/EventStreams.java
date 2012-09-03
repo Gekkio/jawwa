@@ -1,6 +1,7 @@
 package fi.jawsy.jawwa.frp;
 
 import java.io.ObjectStreamException;
+import java.util.concurrent.atomic.AtomicReference;
 
 import fi.jawsy.jawwa.lang.Effect;
 
@@ -30,6 +31,34 @@ public final class EventStreams {
 
     public static <T> EventStream<T> empty(Class<T> clazz) {
         return empty();
+    }
+
+    public static <T> EventStream<T> instant(final T value) {
+        class InstantEventStream extends EventStreamBase<T> {
+            private static final long serialVersionUID = 6465414757355523929L;
+
+            @Override
+            public CleanupHandle foreach(Effect<? super T> e) {
+                e.apply(value);
+                return CleanupHandles.NOOP;
+            }
+
+        }
+        return new InstantEventStream();
+    }
+
+    public static <T> EventStream<T> instant(final AtomicReference<T> value) {
+        class InstantEventStream extends EventStreamBase<T> {
+            private static final long serialVersionUID = -8810804644628923419L;
+
+            @Override
+            public CleanupHandle foreach(Effect<? super T> e) {
+                e.apply(value.get());
+                return CleanupHandles.NOOP;
+            }
+
+        }
+        return new InstantEventStream();
     }
 
     public static <T> EventStream<T> union(final EventStream<? extends T> first, final EventStream<? extends T> second) {

@@ -7,6 +7,8 @@ import fi.jawsy.jawwa.lang.Effect;
 
 public interface Signal<T> {
 
+    EventStream<T> nowAndChange();
+
     T now();
 
     EventStream<T> change();
@@ -28,6 +30,11 @@ public interface Signal<T> {
 
         public static <T> Signal.Val<T> create(T value) {
             return new Signal.Val<T>(value);
+        }
+
+        @Override
+        public EventStream<T> nowAndChange() {
+            return EventStreams.instant(value);
         }
 
     }
@@ -72,6 +79,11 @@ public interface Signal<T> {
 
         public static <T> Signal.Var<T> create(T initial) {
             return new Signal.Var<T>(initial);
+        }
+
+        @Override
+        public EventStream<T> nowAndChange() {
+            return EventStreams.instant(value).union(eventSource);
         }
 
     }
