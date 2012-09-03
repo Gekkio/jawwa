@@ -85,7 +85,7 @@ public class ServerPushEventSource<E> extends EventStreamBase<E> implements Even
     }
 
     @Override
-    public CleanupHandle consume(EventStream<? extends E> es) {
+    public CleanupHandle pipeFrom(EventStream<? extends E> es) {
         class FireEvent implements Effect<E>, Serializable {
             private static final long serialVersionUID = -6329853533953354977L;
 
