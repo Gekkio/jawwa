@@ -11,6 +11,11 @@
 	<name>Jawwa :: Validation</name>
 
 	<dependencies>
+		<!-- *** Internal dependencies *** -->
+		<dependency>
+			<groupId>fi.jawsy.jawwa</groupId>
+			<artifactId>jawwa-lang</artifactId>
+		</dependency>
 		<!-- *** External dependencies *** -->
 		<dependency>
 			<groupId>com.google.guava</groupId>

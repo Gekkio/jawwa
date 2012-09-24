@@ -5,6 +5,8 @@ import java.io.Serializable;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+import fi.jawsy.jawwa.lang.Tuple2;
+
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
@@ -51,6 +53,8 @@ public abstract class Validation<E, T> implements Serializable {
         return Joiner.on('\n').join(getErrors());
     }
 
+    public abstract <O> Validation<E, Tuple2<T, O>> zipWith(Validation<E, O> other);
+
     Validation() {
     }
 
@@ -72,6 +76,12 @@ public abstract class Validation<E, T> implements Serializable {
             return new Success<E, O>(f.apply(value));
         }
 
+        @Override
+        public <O> Validation<E, Tuple2<T, O>> zipWith(Validation<E, O> other) {
+            if (other.isErrors())
+                return Validation.failure(other.getErrors());
+            return Validation.success(Tuple2.of(value, other.getValue()));
+        }
     }
 
     @RequiredArgsConstructor
@@ -93,6 +103,12 @@ public abstract class Validation<E, T> implements Serializable {
             return (Validation) this;
         }
 
+        @Override
+        public <O> Validation<E, Tuple2<T, O>> zipWith(Validation<E, O> other) {
+            if (other.isErrors())
+                return Validation.failure(ImmutableList.<E> builder().addAll(errors).addAll(other.getErrors()).build());
+            return Validation.failure(errors);
+        }
     }
 
 }
