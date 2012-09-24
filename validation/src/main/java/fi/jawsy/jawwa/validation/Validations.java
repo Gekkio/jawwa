@@ -16,6 +16,15 @@ public final class Validations {
         return errors.build();
     }
 
+    public static <E> ImmutableList<E> collectErrors(Iterable<? extends Validation<E, ?>> validations) {
+        ImmutableList.Builder<E> errors = ImmutableList.builder();
+        for (Validation<E, ?> v : validations) {
+            if (v.isErrors())
+                errors.addAll(v.getErrors());
+        }
+        return errors.build();
+    }
+
     public static boolean hasErrors(Validation<?, ?>... validations) {
         for (Validation<?, ?> v : validations) {
             if (v.isErrors())
