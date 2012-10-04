@@ -1,9 +1,11 @@
 package fi.jawsy.jawwa.validation;
 
 import java.io.Serializable;
+import java.util.Collection;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+
 
 import fi.jawsy.jawwa.lang.Tuple2;
 
@@ -20,12 +22,12 @@ public abstract class Validation<E, T> implements Serializable {
         return new Success<E, T>(object);
     }
 
-    public static <E, T> Validation<E, T> failure(ImmutableList<E> errors) {
+    public static <E, T> Validation<E, T> failure(Collection<? extends E> errors) {
         Preconditions.checkArgument(!errors.isEmpty(), "errors cannot be empty");
-        return new Failure<E, T>(errors);
+        return new Failure<E, T>(ImmutableList.copyOf(errors));
     }
 
-    public static <E, T> Validation<E, T> create(T object, ImmutableList<E> errors) {
+    public static <E, T> Validation<E, T> create(T object, Collection<? extends E> errors) {
         if (errors.isEmpty())
             return success(object);
         return failure(errors);
