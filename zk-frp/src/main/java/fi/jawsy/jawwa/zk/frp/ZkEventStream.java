@@ -5,9 +5,12 @@ import java.io.Serializable;
 import lombok.RequiredArgsConstructor;
 
 import org.zkoss.zk.ui.Component;
+import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.event.Deferrable;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
+
+import com.google.common.base.Preconditions;
 
 import fi.jawsy.jawwa.frp.CancellationToken;
 import fi.jawsy.jawwa.frp.EventStream;
@@ -34,6 +37,7 @@ public class ZkEventStream<E extends Event> extends EventStreamBase<E> {
         private final Effect<? super E> f;
 
         public void register(CancellationToken token) {
+            Preconditions.checkNotNull(Executions.getCurrent(), "cannot register listener outside ZK execution");
             c.addEventListener(eventName, this);
             if (token.canBeCancelled()) {
                 token.onCancel(this);
@@ -44,6 +48,7 @@ public class ZkEventStream<E extends Event> extends EventStreamBase<E> {
         }
 
         void unregister() {
+            Preconditions.checkNotNull(Executions.getCurrent(), "cannot unregister listener outside ZK execution");
             c.removeEventListener(eventName, this);
         }
 
