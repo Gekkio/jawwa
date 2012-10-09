@@ -101,7 +101,6 @@ public abstract class EventStreamBase<E> implements EventStream<E>, Serializable
                         if (oldToken != null)
                             oldToken.cancel();
 
-                        innerToken.set(newToken);
                         f.apply(input).foreach(e, newToken);
                     }
                 }
