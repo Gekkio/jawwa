@@ -6,6 +6,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
+import lombok.val;
+
 import com.google.common.base.Function;
 import com.google.common.base.Functions;
 import com.google.common.base.Objects;
@@ -19,12 +21,17 @@ public abstract class EventStreamBase<E> implements EventStream<E>, Serializable
     private static final long serialVersionUID = 4389299638075146452L;
 
     @Override
+    public EventStream<E> foreach(Effect<? super E> e) {
+        return foreach(e, CancellationToken.NONE);
+    }
+
+    @Override
     public <U> EventStream<U> map(final Function<? super E, U> mapper) {
         class MappedEventStream extends EventStreamBase<U> {
             private static final long serialVersionUID = 8746853070424352228L;
 
             @Override
-            public CleanupHandle foreach(final Effect<? super U> e) {
+            public EventStream<U> foreach(final Effect<? super U> e, CancellationToken token) {
                 class MapperEffect implements Effect<E>, Serializable {
                     private static final long serialVersionUID = -6599624715377023011L;
 
@@ -33,7 +40,8 @@ public abstract class EventStreamBase<E> implements EventStream<E>, Serializable
                         e.apply(mapper.apply(input));
                     }
                 }
-                return EventStreamBase.this.foreach(new MapperEffect());
+                EventStreamBase.this.foreach(new MapperEffect(), token);
+                return this;
             }
         }
         return new MappedEventStream();
@@ -55,7 +63,7 @@ public abstract class EventStreamBase<E> implements EventStream<E>, Serializable
             private static final long serialVersionUID = 2518677092062764830L;
 
             @Override
-            public CleanupHandle foreach(final Effect<? super E> e) {
+            public EventStream<E> foreach(final Effect<? super E> e, CancellationToken token) {
                 class FilterEffect implements Effect<E>, Serializable {
                     private static final long serialVersionUID = -7284834867826632697L;
 
@@ -66,7 +74,8 @@ public abstract class EventStreamBase<E> implements EventStream<E>, Serializable
                         }
                     }
                 }
-                return EventStreamBase.this.foreach(new FilterEffect());
+                EventStreamBase.this.foreach(new FilterEffect(), token);
+                return this;
             }
         }
         return new FilteredEventStream();
@@ -78,35 +87,45 @@ public abstract class EventStreamBase<E> implements EventStream<E>, Serializable
             private static final long serialVersionUID = -1662566691398092407L;
 
             @Override
-            public CleanupHandle foreach(final Effect<? super U> e) {
-                final AtomicReference<CleanupHandle> inner = new AtomicReference<CleanupHandle>();
+            public EventStream<U> foreach(final Effect<? super U> e, CancellationToken token) {
+                val innerToken = new AtomicReference<CancellationTokenSource>();
 
                 class FlatMapEffect implements Effect<E>, Serializable {
                     private static final long serialVersionUID = -3177496251373686951L;
 
                     @Override
                     public void apply(E input) {
-                        CleanupHandle old = inner.getAndSet(null);
-                        if (old != null)
-                            old.cleanup();
-                        inner.set(f.apply(input).foreach(e));
+                        val newToken = new CancellationTokenSource();
+
+                        val oldToken = innerToken.getAndSet(newToken);
+                        if (oldToken != null)
+                            oldToken.cancel();
+
+                        innerToken.set(newToken);
+                        f.apply(input).foreach(e, newToken);
                     }
                 }
 
-                final CleanupHandle outer = EventStreamBase.this.foreach(new FlatMapEffect());
+                EventStreamBase.this.foreach(new FlatMapEffect(), token);
 
-                class FlatMapCleanup implements CleanupHandle, Serializable {
-                    private static final long serialVersionUID = 7160659915770883489L;
-
-                    @Override
-                    public void cleanup() {
-                        outer.cleanup();
-                        CleanupHandle old = inner.getAndSet(null);
-                        if (old != null)
-                            old.cleanup();
-                    }
+                if (token.canBeCancelled()) {
+                    token.onCancel(new Runnable() {
+                        @Override
+                        public void run() {
+                            val oldToken = innerToken.getAndSet(null);
+                            if (oldToken != null)
+                                oldToken.cancel();
+                        }
+                    });
                 }
-                return new FlatMapCleanup();
+
+                if (token.isCancelled()) {
+                    val oldToken = innerToken.getAndSet(null);
+                    if (oldToken != null)
+                        oldToken.cancel();
+                }
+
+                return this;
             }
         }
         return new FlatMappedEventStream();
@@ -125,7 +144,7 @@ public abstract class EventStreamBase<E> implements EventStream<E>, Serializable
             private final AtomicReference<E> lastValue = new AtomicReference<E>();
 
             @Override
-            public CleanupHandle foreach(final Effect<? super E> e) {
+            public EventStream<E> foreach(final Effect<? super E> e, CancellationToken token) {
                 class DistinctEffect implements Effect<E>, Serializable {
                     private static final long serialVersionUID = 6109531897034720266L;
 
@@ -137,7 +156,8 @@ public abstract class EventStreamBase<E> implements EventStream<E>, Serializable
                         }
                     }
                 }
-                return EventStreamBase.this.foreach(new DistinctEffect());
+                EventStreamBase.this.foreach(new DistinctEffect(), token);
+                return this;
             }
         }
         return new DistinctEventStream();
@@ -145,8 +165,13 @@ public abstract class EventStreamBase<E> implements EventStream<E>, Serializable
 
     @Override
     public Signal<E> hold(E initial) {
+        return hold(initial, CancellationToken.NONE);
+    }
+
+    @Override
+    public Signal<E> hold(E initial, CancellationToken token) {
         final Signal.Var<E> s = new Signal.Var<E>(initial);
-        s.pipeFrom(this);
+        pipeTo(s, token);
         return s;
     }
 
@@ -157,25 +182,23 @@ public abstract class EventStreamBase<E> implements EventStream<E>, Serializable
 
             private final AtomicInteger count = new AtomicInteger(amount);
 
-            private volatile boolean active = false;
-
             @Override
-            public CleanupHandle foreach(final Effect<? super E> e) {
+            public EventStream<E> foreach(final Effect<? super E> e, CancellationToken token) {
                 class DropEffect implements Effect<E>, Serializable {
                     private static final long serialVersionUID = 8355486960586782753L;
 
                     @Override
                     public void apply(E input) {
-                        if (!active) {
+                        if (count.get() > 0) {
                             if (count.decrementAndGet() >= 0) {
                                 return;
                             }
-                            active = true;
                         }
                         e.apply(input);
                     }
                 }
-                return EventStreamBase.this.foreach(new DropEffect());
+                EventStreamBase.this.foreach(new DropEffect(), token);
+                return this;
             }
         }
         return new DropEventStream();
@@ -188,26 +211,23 @@ public abstract class EventStreamBase<E> implements EventStream<E>, Serializable
 
             private final AtomicInteger count = new AtomicInteger(amount);
 
-            private volatile boolean finished = false;
-
             @Override
-            public CleanupHandle foreach(final Effect<? super E> e) {
+            public EventStream<E> foreach(final Effect<? super E> e, CancellationToken token) {
                 class TakeEffect implements Effect<E>, Serializable {
                     private static final long serialVersionUID = -8483020072868231410L;
 
                     @Override
                     public void apply(E input) {
-                        if (finished) {
+                        if (count.get() <= 0) {
                             return;
                         }
                         if (count.decrementAndGet() >= 0) {
                             e.apply(input);
-                        } else {
-                            finished = true;
                         }
                     }
                 }
-                return EventStreamBase.this.foreach(new TakeEffect());
+                EventStreamBase.this.foreach(new TakeEffect(), token);
+                return this;
             }
         }
         return new TakeEventStream();
@@ -221,8 +241,8 @@ public abstract class EventStreamBase<E> implements EventStream<E>, Serializable
             private final AtomicBoolean active = new AtomicBoolean();
 
             @Override
-            public CleanupHandle foreach(final Effect<? super E> e) {
-                final AtomicReference<CleanupHandle> gateHandle = new AtomicReference<CleanupHandle>(CleanupHandles.NOOP);
+            public EventStream<E> foreach(final Effect<? super E> e, CancellationToken token) {
+                val gateToken = new CancellationTokenSource();
 
                 class DropUntilGateEffect implements Effect<Object>, Serializable {
                     private static final long serialVersionUID = 2741111517742942539L;
@@ -230,9 +250,7 @@ public abstract class EventStreamBase<E> implements EventStream<E>, Serializable
                     @Override
                     public void apply(Object input) {
                         if (active.compareAndSet(false, true)) {
-                            CleanupHandle old = gateHandle.getAndSet(null);
-                            if (old != null)
-                                old.cleanup();
+                            gateToken.cancel();
                         }
                     }
                 }
@@ -249,12 +267,23 @@ public abstract class EventStreamBase<E> implements EventStream<E>, Serializable
 
                 }
 
-                CleanupHandle gate = es.foreach(new DropUntilGateEffect());
+                es.foreach(new DropUntilGateEffect(), gateToken);
 
-                if (!gateHandle.compareAndSet(CleanupHandles.NOOP, gate))
-                    gate.cleanup();
+                if (token.canBeCancelled()) {
+                    token.onCancel(new Runnable() {
+                        @Override
+                        public void run() {
+                            gateToken.cancel();
+                        }
+                    });
+                }
 
-                return EventStreamBase.this.foreach(new DropUntilEffect());
+                if (token.isCancelled()) {
+                    gateToken.cancel();
+                }
+
+                EventStreamBase.this.foreach(new DropUntilEffect(), token);
+                return this;
             }
 
         }
@@ -269,9 +298,8 @@ public abstract class EventStreamBase<E> implements EventStream<E>, Serializable
             private final AtomicBoolean finished = new AtomicBoolean();
 
             @Override
-            public CleanupHandle foreach(final Effect<? super E> e) {
-                final AtomicReference<CleanupHandle> gateHandle = new AtomicReference<CleanupHandle>();
-                final AtomicReference<CleanupHandle> handle = new AtomicReference<CleanupHandle>();
+            public EventStream<E> foreach(final Effect<? super E> e, CancellationToken token) {
+                val innerToken = new CancellationTokenSource();
 
                 class TakeUntilGateEffect implements Effect<Object>, Serializable {
                     private static final long serialVersionUID = 2102835224218414042L;
@@ -279,12 +307,7 @@ public abstract class EventStreamBase<E> implements EventStream<E>, Serializable
                     @Override
                     public void apply(Object input) {
                         if (finished.compareAndSet(false, true)) {
-                            CleanupHandle oldGate = gateHandle.getAndSet(null);
-                            if (oldGate != null)
-                                oldGate.cleanup();
-                            CleanupHandle old = handle.getAndSet(null);
-                            if (old != null)
-                                old.cleanup();
+                            innerToken.cancel();
                         }
                     }
                 }
@@ -300,15 +323,23 @@ public abstract class EventStreamBase<E> implements EventStream<E>, Serializable
                     }
                 }
 
-                CleanupHandle oldGate = gateHandle.getAndSet(es.foreach(new TakeUntilGateEffect()));
-                if (oldGate != null)
-                    oldGate.cleanup();
+                es.foreach(new TakeUntilGateEffect(), innerToken);
+                EventStreamBase.this.foreach(new TakeUntilEffect(), innerToken);
 
-                CleanupHandle old = handle.getAndSet(EventStreamBase.this.foreach(new TakeUntilEffect()));
-                if (old != null)
-                    old.cleanup();
+                if (token.canBeCancelled()) {
+                    token.onCancel(new Runnable() {
+                        @Override
+                        public void run() {
+                            innerToken.cancel();
+                        }
+                    });
+                }
 
-                return CleanupHandles.merge(gateHandle, handle);
+                if (token.isCancelled()) {
+                    innerToken.cancel();
+                }
+
+                return this;
             }
 
         }
@@ -323,7 +354,7 @@ public abstract class EventStreamBase<E> implements EventStream<E>, Serializable
             private final Object lock = new Object();
 
             @Override
-            public CleanupHandle foreach(final Effect<? super E> e) {
+            public EventStream<E> foreach(final Effect<? super E> e, CancellationToken token) {
                 class SynchronizedEffect implements Effect<E>, Serializable {
                     private static final long serialVersionUID = 3131604565473738487L;
 
@@ -335,7 +366,8 @@ public abstract class EventStreamBase<E> implements EventStream<E>, Serializable
                     }
                 }
 
-                return EventStreamBase.this.foreach(new SynchronizedEffect());
+                EventStreamBase.this.foreach(new SynchronizedEffect(), token);
+                return this;
             }
         }
         return new SynchronizedEventStream();
@@ -347,7 +379,7 @@ public abstract class EventStreamBase<E> implements EventStream<E>, Serializable
             private static final long serialVersionUID = 7220127200602223002L;
 
             @Override
-            public CleanupHandle foreach(final Effect<? super E> e) {
+            public EventStream<E> foreach(final Effect<? super E> e, CancellationToken token) {
                 class AsynchronousEffect implements Effect<E>, Serializable {
                     private static final long serialVersionUID = 4797805764789744272L;
 
@@ -362,7 +394,8 @@ public abstract class EventStreamBase<E> implements EventStream<E>, Serializable
                     }
 
                 }
-                return EventStreamBase.this.foreach(new AsynchronousEffect());
+                EventStreamBase.this.foreach(new AsynchronousEffect(), token);
+                return this;
             }
 
         }
@@ -376,9 +409,7 @@ public abstract class EventStreamBase<E> implements EventStream<E>, Serializable
             private static final long serialVersionUID = -6796045368801928080L;
 
             @Override
-            public CleanupHandle foreach(final Effect<? super E> e) {
-                final AtomicReference<CleanupHandle> handle = new AtomicReference<CleanupHandle>();
-
+            public EventStream<E> foreach(final Effect<? super E> e, CancellationToken token) {
                 class TakeWhileEffect implements Effect<E>, Serializable {
                     private static final long serialVersionUID = -7795789919137505152L;
 
@@ -386,17 +417,12 @@ public abstract class EventStreamBase<E> implements EventStream<E>, Serializable
                     public void apply(E input) {
                         if (p.apply(input)) {
                             e.apply(input);
-                        } else {
-                            CleanupHandle h = handle.getAndSet(null);
-                            if (h != null)
-                                h.cleanup();
                         }
                     }
                 }
 
-                handle.set(EventStreamBase.this.foreach(new TakeWhileEffect()));
-
-                return CleanupHandles.atomic(handle);
+                EventStreamBase.this.foreach(new TakeWhileEffect(), token);
+                return null;
             }
 
         }
@@ -404,8 +430,18 @@ public abstract class EventStreamBase<E> implements EventStream<E>, Serializable
     }
 
     @Override
-    public CleanupHandle pipeTo(EventSink<? super E> sink) {
-        return sink.pipeFrom(this);
+    public EventStream<E> pipeTo(EventSink<? super E> sink) {
+        return pipeTo(sink, CancellationToken.NONE);
+    }
+
+    @Override
+    public EventStream<E> pipeTo(final EventSink<? super E> sink, CancellationToken token) {
+        return foreach(new Effect<E>() {
+            @Override
+            public void apply(E input) {
+                sink.fire(input);
+            }
+        }, token);
     }
 
 }
