@@ -6,8 +6,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
-import lombok.val;
-
 import com.google.common.base.Function;
 import com.google.common.base.Functions;
 import com.google.common.base.Objects;
@@ -88,16 +86,16 @@ public abstract class EventStreamBase<E> implements EventStream<E>, Serializable
 
             @Override
             public EventStream<U> foreach(final Effect<? super U> e, CancellationToken token) {
-                val innerToken = new AtomicReference<CancellationTokenSource>();
+                final AtomicReference<CancellationTokenSource> innerToken = new AtomicReference<CancellationTokenSource>();
 
                 class FlatMapEffect implements Effect<E>, Serializable {
                     private static final long serialVersionUID = -3177496251373686951L;
 
                     @Override
                     public void apply(E input) {
-                        val newToken = new CancellationTokenSource();
+                        CancellationTokenSource newToken = new CancellationTokenSource();
 
-                        val oldToken = innerToken.getAndSet(newToken);
+                        CancellationTokenSource oldToken = innerToken.getAndSet(newToken);
                         if (oldToken != null)
                             oldToken.cancel();
 
@@ -111,7 +109,7 @@ public abstract class EventStreamBase<E> implements EventStream<E>, Serializable
                     token.onCancel(new Runnable() {
                         @Override
                         public void run() {
-                            val oldToken = innerToken.getAndSet(null);
+                            CancellationTokenSource oldToken = innerToken.getAndSet(null);
                             if (oldToken != null)
                                 oldToken.cancel();
                         }
@@ -119,7 +117,7 @@ public abstract class EventStreamBase<E> implements EventStream<E>, Serializable
                 }
 
                 if (token.isCancelled()) {
-                    val oldToken = innerToken.getAndSet(null);
+                    CancellationTokenSource oldToken = innerToken.getAndSet(null);
                     if (oldToken != null)
                         oldToken.cancel();
                 }
@@ -241,7 +239,7 @@ public abstract class EventStreamBase<E> implements EventStream<E>, Serializable
 
             @Override
             public EventStream<E> foreach(final Effect<? super E> e, CancellationToken token) {
-                val gateToken = new CancellationTokenSource();
+                final CancellationTokenSource gateToken = new CancellationTokenSource();
 
                 class DropUntilGateEffect implements Effect<Object>, Serializable {
                     private static final long serialVersionUID = 2741111517742942539L;
@@ -298,7 +296,7 @@ public abstract class EventStreamBase<E> implements EventStream<E>, Serializable
 
             @Override
             public EventStream<E> foreach(final Effect<? super E> e, CancellationToken token) {
-                val innerToken = new CancellationTokenSource();
+                final CancellationTokenSource innerToken = new CancellationTokenSource();
 
                 class TakeUntilGateEffect implements Effect<Object>, Serializable {
                     private static final long serialVersionUID = 2102835224218414042L;
