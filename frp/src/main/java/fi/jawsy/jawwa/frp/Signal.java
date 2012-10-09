@@ -3,7 +3,6 @@ package fi.jawsy.jawwa.frp;
 import java.util.concurrent.atomic.AtomicReference;
 
 import lombok.RequiredArgsConstructor;
-import fi.jawsy.jawwa.lang.Effect;
 
 public interface Signal<T> {
 
@@ -55,16 +54,6 @@ public interface Signal<T> {
         @Override
         public EventStream<T> change() {
             return eventSource;
-        }
-
-        @Override
-        public CleanupHandle pipeFrom(EventStream<? extends T> es) {
-            return es.foreach(new Effect<T>() {
-                @Override
-                public void apply(T input) {
-                    update(input);
-                }
-            });
         }
 
         @Override

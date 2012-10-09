@@ -14,13 +14,13 @@ public final class EventStreams {
     private static final EventStream EMPTY = new EventStreamBase() {
         private static final long serialVersionUID = 9029795963118549722L;
 
-        @Override
-        public CleanupHandle foreach(Effect e) {
-            return CleanupHandles.NOOP;
-        }
-
         private Object readResolve() throws ObjectStreamException {
             return EMPTY;
+        }
+
+        @Override
+        public EventStream foreach(Effect e, CancellationToken token) {
+            return this;
         }
     };
 
@@ -38,9 +38,10 @@ public final class EventStreams {
             private static final long serialVersionUID = 6465414757355523929L;
 
             @Override
-            public CleanupHandle foreach(Effect<? super T> e) {
-                e.apply(value);
-                return CleanupHandles.NOOP;
+            public EventStream<T> foreach(Effect<? super T> e, CancellationToken token) {
+                if (!token.isCancelled())
+                    e.apply(value);
+                return this;
             }
 
         }
@@ -52,9 +53,10 @@ public final class EventStreams {
             private static final long serialVersionUID = -8810804644628923419L;
 
             @Override
-            public CleanupHandle foreach(Effect<? super T> e) {
-                e.apply(value.get());
-                return CleanupHandles.NOOP;
+            public EventStream<T> foreach(Effect<? super T> e, CancellationToken token) {
+                if (!token.isCancelled())
+                    e.apply(value.get());
+                return this;
             }
 
         }
@@ -66,10 +68,10 @@ public final class EventStreams {
             private static final long serialVersionUID = -3906439455738789209L;
 
             @Override
-            public CleanupHandle foreach(Effect<? super T> e) {
-                final CleanupHandle esc1 = first.foreach(e);
-                final CleanupHandle esc2 = second.foreach(e);
-                return CleanupHandles.merge(esc1, esc2);
+            public EventStream<T> foreach(Effect<? super T> e, CancellationToken token) {
+                first.foreach(e, token);
+                second.foreach(e, token);
+                return this;
             }
         }
         return new UnionEventStream();
@@ -82,14 +84,11 @@ public final class EventStreams {
 
             @SuppressWarnings("unchecked")
             @Override
-            public CleanupHandle foreach(Effect<? super T> e) {
-                CleanupHandle[] handles = new CleanupHandle[streams.length];
-
-                for (int i = 0; i < streams.length; i++) {
-                    handles[i] = streams[i].foreach(e);
+            public EventStream<T> foreach(Effect<? super T> e, CancellationToken token) {
+                for (EventStream stream : streams) {
+                    stream.foreach(e, token);
                 }
-
-                return CleanupHandles.merge(handles);
+                return this;
             }
         }
         return new UnionEventStream();

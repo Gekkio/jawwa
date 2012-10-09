@@ -10,7 +10,9 @@ import fi.jawsy.jawwa.lang.Effect;
 
 public interface EventStream<T> {
 
-    CleanupHandle foreach(Effect<? super T> e);
+    EventStream<T> foreach(Effect<? super T> e);
+
+    EventStream<T> foreach(Effect<? super T> e, CancellationToken token);
 
     <U> EventStream<U> map(Function<? super T, U> f);
 
@@ -40,8 +42,12 @@ public interface EventStream<T> {
 
     EventStream<T> asynchronous(Executor executor);
 
-    CleanupHandle pipeTo(EventSink<? super T> sink);
+    EventStream<T> pipeTo(EventSink<? super T> sink);
+
+    EventStream<T> pipeTo(EventSink<? super T> sink, CancellationToken token);
 
     Signal<T> hold(T initial);
+
+    Signal<T> hold(T initial, CancellationToken token);
 
 }

@@ -9,9 +9,8 @@ import org.zkoss.zk.ui.event.Deferrable;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 
-import com.google.common.base.Preconditions;
-
-import fi.jawsy.jawwa.frp.CleanupHandle;
+import fi.jawsy.jawwa.frp.CancellationToken;
+import fi.jawsy.jawwa.frp.EventStream;
 import fi.jawsy.jawwa.frp.EventStreamBase;
 import fi.jawsy.jawwa.lang.Effect;
 
@@ -28,23 +27,29 @@ public class ZkEventStream<E extends Event> extends EventStreamBase<E> {
         this(c, eventName, false);
     }
 
-    class Listener implements EventListener<E>, CleanupHandle, Serializable, Deferrable {
+    @RequiredArgsConstructor
+    class Listener implements EventListener<E>, Serializable, Deferrable, Runnable {
         private static final long serialVersionUID = 5492016167303631840L;
 
         private final Effect<? super E> f;
-        private boolean registered;
 
-        public Listener(Effect<? super E> f) {
-            this.f = f;
+        public void register(CancellationToken token) {
             c.addEventListener(eventName, this);
-            registered = true;
+            if (token.canBeCancelled()) {
+                token.onCancel(this);
+            }
+            if (token.isCancelled()) {
+                unregister();
+            }
+        }
+
+        void unregister() {
+            c.removeEventListener(eventName, this);
         }
 
         @Override
-        public void cleanup() {
-            Preconditions.checkArgument(registered, "listener not registered (already cleaned up?)");
-            c.removeEventListener(eventName, this);
-            registered = false;
+        public void run() {
+            unregister();
         }
 
         @Override
@@ -60,8 +65,10 @@ public class ZkEventStream<E extends Event> extends EventStreamBase<E> {
     }
 
     @Override
-    public CleanupHandle foreach(final Effect<? super E> e) {
-        return new Listener(e);
+    public EventStream<E> foreach(final Effect<? super E> e, CancellationToken token) {
+        Listener listener = new Listener(e);
+        listener.register(token);
+        return this;
     }
 
     public ZkEventStream<E> deferrable() {
