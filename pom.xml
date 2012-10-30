@@ -17,6 +17,7 @@
 		<module>zk-cleditor</module>
 		<module>zk-frp</module>
 		<module>zk-gritter</module>
+		<module>zk-highcharts</module>
 		<module>zk-metrics</module>
 	</modules>
 
