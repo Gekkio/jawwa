@@ -5,7 +5,10 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import com.google.common.base.Function;
 import com.google.common.base.Functions;
+import com.google.common.base.Preconditions;
 import com.google.common.base.Supplier;
+import com.google.common.collect.FluentIterable;
+import com.google.common.collect.ImmutableList;
 
 import fi.jawsy.jawwa.lang.Effect;
 
@@ -103,4 +106,58 @@ public abstract class SignalBase<T> implements Signal<T>, Serializable, Supplier
         return new FlatMappedSignal();
     }
 
+    @Override
+    public Signal<ImmutableList<T>> sequence() {
+        return sequence(CancellationToken.NONE);
+    }
+
+    @Override
+    public Signal<ImmutableList<T>> sequence(CancellationToken token) {
+        return sequenceInternal(-1, token);
+    }
+
+    @Override
+    public Signal<ImmutableList<T>> sequence(int windowSize) {
+        return sequence(windowSize, CancellationToken.NONE);
+    }
+
+    @Override
+    public Signal<ImmutableList<T>> sequence(int windowSize, CancellationToken token) {
+        Preconditions.checkArgument(windowSize >= 0, "windowSize must be positive");
+        return sequenceInternal(windowSize, token);
+    }
+
+    private Signal<ImmutableList<T>> sequenceInternal(final int windowSize, CancellationToken token) {
+        final AtomicReference<ImmutableList<T>> data = new AtomicReference<ImmutableList<T>>(ImmutableList.<T> of());
+        final EventSource<ImmutableList<T>> change = new EventSource<ImmutableList<T>>();
+
+        this.nowAndChange().foreach(new Effect<T>() {
+            @Override
+            public void apply(T input) {
+                ImmutableList<T> newData;
+                synchronized (data) {
+                    FluentIterable<T> oldData = (windowSize >= 0) ? FluentIterable.from(data.get()).limit(windowSize) : FluentIterable.from(data.get());
+                    newData = ImmutableList.<T> builder().addAll(oldData).add(input).build();
+                    data.set(newData);
+                }
+                change.fire(newData);
+            }
+        }, token);
+
+        class SequenceSignal extends SignalBase<ImmutableList<T>> {
+            private static final long serialVersionUID = 6639513066972787774L;
+
+            @Override
+            public ImmutableList<T> now() {
+                return data.get();
+            }
+
+            @Override
+            public EventStream<ImmutableList<T>> change() {
+                return change;
+            }
+
+        }
+        return new SequenceSignal();
+    }
 }

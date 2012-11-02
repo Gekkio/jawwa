@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 
 import com.google.common.base.Function;
 import com.google.common.base.Supplier;
+import com.google.common.collect.ImmutableList;
 
 public interface Signal<T> {
 
@@ -26,6 +27,14 @@ public interface Signal<T> {
     <U> Signal<U> map(Supplier<U> s);
 
     <U> Signal<U> flatMap(Function<? super T, Signal<U>> f);
+
+    Signal<ImmutableList<T>> sequence();
+
+    Signal<ImmutableList<T>> sequence(CancellationToken token);
+
+    Signal<ImmutableList<T>> sequence(int windowSize);
+
+    Signal<ImmutableList<T>> sequence(int windowSize, CancellationToken token);
 
     @RequiredArgsConstructor
     public static class Val<T> extends SignalBase<T> {
