@@ -20,6 +20,8 @@ public interface EventStream<T> {
 
     <U> EventStream<U> map(Supplier<U> s);
 
+    <U> EventStream<U> map(Signal<U> s);
+
     <U> EventStream<U> flatMap(Function<? super T, EventStream<U>> f);
 
     EventStream<T> filter(Predicate<? super T> p);

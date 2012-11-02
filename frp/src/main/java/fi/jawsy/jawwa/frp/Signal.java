@@ -4,7 +4,12 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import lombok.RequiredArgsConstructor;
 
+import com.google.common.base.Function;
+import com.google.common.base.Supplier;
+
 public interface Signal<T> {
+
+    Supplier<T> asSupplier();
 
     EventStream<T> nowAndChange();
 
@@ -12,8 +17,20 @@ public interface Signal<T> {
 
     EventStream<T> change();
 
+    <U> Signal<U> map(Function<? super T, U> f);
+
+    <U> Signal<U> map(U constant);
+
+    <U> Signal<U> map(Signal<U> s);
+
+    <U> Signal<U> map(Supplier<U> s);
+
+    <U> Signal<U> flatMap(Function<? super T, Signal<U>> f);
+
     @RequiredArgsConstructor
-    public static class Val<T> implements Signal<T> {
+    public static class Val<T> extends SignalBase<T> {
+
+        private static final long serialVersionUID = -1559828865027042537L;
 
         private final T value;
 
@@ -38,7 +55,9 @@ public interface Signal<T> {
 
     }
 
-    public static class Var<T> implements Signal<T>, EventSink<T> {
+    public static class Var<T> extends SignalBase<T> implements EventSink<T> {
+        private static final long serialVersionUID = 669403298523450091L;
+
         private final AtomicReference<T> value;
         private final EventSource<T> eventSource = new EventSource<T>();
 
@@ -68,11 +87,6 @@ public interface Signal<T> {
 
         public static <T> Signal.Var<T> create(T initial) {
             return new Signal.Var<T>(initial);
-        }
-
-        @Override
-        public EventStream<T> nowAndChange() {
-            return EventStreams.instant(value).union(eventSource);
         }
 
     }

@@ -3,6 +3,8 @@ package fi.jawsy.jawwa.frp;
 import java.io.ObjectStreamException;
 import java.util.concurrent.atomic.AtomicReference;
 
+import com.google.common.base.Supplier;
+
 import fi.jawsy.jawwa.lang.Effect;
 
 public final class EventStreams {
@@ -59,6 +61,34 @@ public final class EventStreams {
                 return this;
             }
 
+        }
+        return new InstantEventStream();
+    }
+
+    public static <T> EventStream<T> instant(final Supplier<T> value) {
+        class InstantEventStream extends EventStreamBase<T> {
+            private static final long serialVersionUID = -1095226181964772088L;
+
+            @Override
+            public EventStream<T> foreach(Effect<? super T> e, CancellationToken token) {
+                if (!token.isCancelled())
+                    e.apply(value.get());
+                return this;
+            }
+        }
+        return new InstantEventStream();
+    }
+
+    public static <T> EventStream<T> instant(final Signal<T> value) {
+        class InstantEventStream extends EventStreamBase<T> {
+            private static final long serialVersionUID = 1713836073822797296L;
+
+            @Override
+            public EventStream<T> foreach(Effect<? super T> e, CancellationToken token) {
+                if (!token.isCancelled())
+                    e.apply(value.now());
+                return this;
+            }
         }
         return new InstantEventStream();
     }

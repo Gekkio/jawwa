@@ -56,6 +56,11 @@ public abstract class EventStreamBase<E> implements EventStream<E>, Serializable
     }
 
     @Override
+    public <U> EventStream<U> map(Signal<U> s) {
+        return map(Functions.forSupplier(s.asSupplier()));
+    }
+
+    @Override
     public EventStream<E> filter(final Predicate<? super E> p) {
         class FilteredEventStream extends EventStreamBase<E> {
             private static final long serialVersionUID = 2518677092062764830L;
