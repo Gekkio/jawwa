@@ -24,8 +24,10 @@ import org.zkoss.zk.ui.event.SortEvent;
 import org.zkoss.zk.ui.event.URIEvent;
 import org.zkoss.zk.ui.event.UploadEvent;
 import org.zkoss.zk.ui.event.ZIndexEvent;
+import org.zkoss.zul.A;
 import org.zkoss.zul.Bandbox;
 import org.zkoss.zul.Button;
+import org.zkoss.zul.Calendar;
 import org.zkoss.zul.Checkbox;
 import org.zkoss.zul.Column;
 import org.zkoss.zul.Combobox;
@@ -43,9 +45,11 @@ import org.zkoss.zul.Listbox;
 import org.zkoss.zul.Listgroup;
 import org.zkoss.zul.Listheader;
 import org.zkoss.zul.Listitem;
+import org.zkoss.zul.Menu;
 import org.zkoss.zul.Menuitem;
 import org.zkoss.zul.Paging;
 import org.zkoss.zul.Panel;
+import org.zkoss.zul.Popup;
 import org.zkoss.zul.Radiogroup;
 import org.zkoss.zul.Selectbox;
 import org.zkoss.zul.Slider;
@@ -83,6 +87,10 @@ public final class ZkEventStreams {
         return new ZkEventStream<Event>(component, ZulEvents.ON_AFTER_RENDER);
     }
 
+    public static ZkEventStream<Event> onBlur(A component) {
+        return new ZkEventStream<Event>(component, Events.ON_BLUR);
+    }
+
     public static ZkEventStream<Event> onBlur(Button component) {
         return new ZkEventStream<Event>(component, Events.ON_BLUR);
     }
@@ -99,6 +107,10 @@ public final class ZkEventStreams {
         return new ZkEventStream<Event>(component, Events.ON_BLUR);
     }
 
+    public static ZkEventStream<Event> onBlur(Selectbox component) {
+        return new ZkEventStream<Event>(component, Events.ON_BLUR);
+    }
+
     public static ZkEventStream<Event> onBlur(Tree component) {
         return new ZkEventStream<Event>(component, Events.ON_BLUR);
     }
@@ -111,7 +123,15 @@ public final class ZkEventStreams {
         return new ZkEventStream<KeyEvent>(component, Events.ON_CANCEL);
     }
 
+    public static ZkEventStream<InputEvent> onChange(Calendar component) {
+        return new ZkEventStream<InputEvent>(component, Events.ON_CHANGE);
+    }
+
     public static ZkEventStream<InputEvent> onChange(InputElement component) {
+        return new ZkEventStream<InputEvent>(component, Events.ON_CHANGE);
+    }
+
+    public static ZkEventStream<InputEvent> onChange(Menu component) {
         return new ZkEventStream<InputEvent>(component, Events.ON_CHANGE);
     }
 
@@ -175,6 +195,10 @@ public final class ZkEventStreams {
         return new ZkEventStream<ErrorEvent>(component, Events.ON_ERROR);
     }
 
+    public static ZkEventStream<Event> onFocus(A component) {
+        return new ZkEventStream<Event>(component, Events.ON_FOCUS);
+    }
+
     public static ZkEventStream<Event> onFocus(Button component) {
         return new ZkEventStream<Event>(component, Events.ON_FOCUS);
     }
@@ -191,11 +215,19 @@ public final class ZkEventStreams {
         return new ZkEventStream<Event>(component, Events.ON_FOCUS);
     }
 
+    public static ZkEventStream<Event> onFocus(Selectbox component) {
+        return new ZkEventStream<Event>(component, Events.ON_FOCUS);
+    }
+
     public static ZkEventStream<Event> onFocus(Tree component) {
         return new ZkEventStream<Event>(component, Events.ON_FOCUS);
     }
 
     public static ZkEventStream<Event> onGroup(Column component) {
+        return new ZkEventStream<Event>(component, Events.ON_GROUP);
+    }
+
+    public static ZkEventStream<Event> onGroup(Listheader component) {
         return new ZkEventStream<Event>(component, Events.ON_GROUP);
     }
 
@@ -268,6 +300,10 @@ public final class ZkEventStreams {
     }
 
     public static ZkEventStream<OpenEvent> onOpen(Panel component) {
+        return new ZkEventStream<OpenEvent>(component, Events.ON_OPEN);
+    }
+
+    public static ZkEventStream<OpenEvent> onOpen(Popup component) {
         return new ZkEventStream<OpenEvent>(component, Events.ON_OPEN);
     }
 
@@ -355,6 +391,10 @@ public final class ZkEventStreams {
         return new ZkEventStream<SelectionEvent>(component, Events.ON_SELECTION);
     }
 
+    public static ZkEventStream<SizeEvent> onSize(LayoutRegion component) {
+        return new ZkEventStream<SizeEvent>(component, Events.ON_SIZE);
+    }
+
     public static ZkEventStream<SizeEvent> onSize(Panel component) {
         return new ZkEventStream<SizeEvent>(component, Events.ON_SIZE);
     }
@@ -383,6 +423,14 @@ public final class ZkEventStreams {
         return new ZkEventStream<Event>(component, "onTimeZoneChange");
     }
 
+    public static ZkEventStream<SortEvent> onUngroup(Column component) {
+        return new ZkEventStream<SortEvent>(component, Events.ON_UNGROUP);
+    }
+
+    public static ZkEventStream<Event> onUngroup(Listheader component) {
+        return new ZkEventStream<Event>(component, Events.ON_UNGROUP);
+    }
+
     public static ZkEventStream<UploadEvent> onUpload(Button component) {
         return new ZkEventStream<UploadEvent>(component, Events.ON_UPLOAD);
     }
@@ -401,6 +449,10 @@ public final class ZkEventStreams {
 
     public static ZkEventStream<URIEvent> onUriChange(Iframe component) {
         return new ZkEventStream<URIEvent>(component, Events.ON_URI_CHANGE);
+    }
+
+    public static ZkEventStream<Event> onWeekClick(Calendar component) {
+        return new ZkEventStream<Event>(component, "onWeekClick");
     }
 
     public static ZkEventStream<ZIndexEvent> onZIndex(Panel component) {
