@@ -1,14 +1,20 @@
 package fi.jawsy.jawwa.zk.highcharts;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.IdentityHashMap;
+import java.util.Map;
 
+import org.zkoss.json.JSONAware;
+import org.zkoss.json.JSONObject;
 import org.zkoss.zk.ui.sys.ContentRenderer;
 import org.zkoss.zul.Div;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 
 import fi.jawsy.jawwa.lang.Option;
 import fi.jawsy.jawwa.zk.highcharts.impl.HighchartsImpl;
@@ -20,6 +26,34 @@ public class Highcharts extends Div {
     private Options options;
 
     private ArrayList<HighchartsSeries<?>> series = Lists.newArrayList();
+
+    @lombok.experimental.Value
+    static class DeltaWrapper implements Serializable, JSONAware {
+        private static final long serialVersionUID = -8401732188846298079L;
+
+        public final int series;
+        public final SeriesDelta<?> delta;
+
+        @Override
+        public String toJSONString() {
+            JSONObject json = new JSONObject();
+            json.put("series", series);
+            json.put("delta", delta);
+            return json.toJSONString();
+        }
+    }
+
+    @lombok.experimental.Value
+    class Listener implements SeriesDeltaListener<Object> {
+        private final int series;
+
+        @Override
+        public void onDelta(SeriesDelta<? extends Object> delta) {
+            smartUpdate("delta", new DeltaWrapper(series, delta), true);
+        }
+    }
+
+    private final IdentityHashMap<HighchartsSeries<?>, Listener> listeners = Maps.newIdentityHashMap();
 
     public static final class Value<T> {
         private Option<T> value;
@@ -44,6 +78,8 @@ public class Highcharts extends Div {
     public static interface Options extends RawJsonSupport {
         public static interface Chart extends RawJsonSupport {
             Value<Boolean> alignTicks();
+
+            Value<Animation> animation();
 
             Value<Color> backgroundColor();
 
@@ -304,21 +340,36 @@ public class Highcharts extends Div {
         }
     }
 
+    public void addSeries(HighchartsSeries<?> series) {
+        setSeries(this.series.size(), series);
+    }
+
     public void setSeries(int index, HighchartsSeries<?> series) {
         if (this.series.size() > index) {
-            this.series.set(index, series);
+            HighchartsSeries<?> oldSeries = this.series.set(index, series);
+            for (Listener listener : Option.option(listeners.remove(oldSeries))) {
+                oldSeries.removeSeriesDeltaListener(listener);
+            }
         } else {
             for (int i = this.series.size(); i < index; i++) {
                 this.series.add(null);
             }
             this.series.add(series);
         }
+        Listener listener = new Listener(index);
+        listeners.put(series, listener);
+        series.addSeriesDeltaListener(listener);
         smartUpdate("series", this.series);
     }
 
     public void clearSeries() {
         this.series.clear();
         this.series.trimToSize();
+
+        for (Map.Entry<HighchartsSeries<?>, Listener> listenerEntry : listeners.entrySet()) {
+            listenerEntry.getKey().removeSeriesDeltaListener(listenerEntry.getValue());
+        }
+        listeners.clear();
         smartUpdate("series", this.series);
     }
 

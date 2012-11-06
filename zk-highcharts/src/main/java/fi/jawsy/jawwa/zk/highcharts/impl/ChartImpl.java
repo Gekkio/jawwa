@@ -4,6 +4,7 @@ import org.zkoss.json.JSONObject;
 
 import com.google.common.collect.ImmutableMap;
 
+import fi.jawsy.jawwa.zk.highcharts.Animation;
 import fi.jawsy.jawwa.zk.highcharts.Color;
 import fi.jawsy.jawwa.zk.highcharts.Highcharts;
 import fi.jawsy.jawwa.zk.highcharts.Highcharts.Value;
@@ -11,6 +12,7 @@ import fi.jawsy.jawwa.zk.highcharts.Highcharts.Value;
 class ChartImpl extends OptionBase implements Highcharts.Options.Chart {
 
     private Value<Boolean> alignTicks;
+    private Value<Animation> animation;
     private Value<Color> backgroundColor;
     private Value<Color> borderColor;
     private Value<Integer> borderRadius;
@@ -33,6 +35,13 @@ class ChartImpl extends OptionBase implements Highcharts.Options.Chart {
         if (alignTicks == null)
             alignTicks = new Value<Boolean>();
         return alignTicks;
+    }
+
+    @Override
+    public Value<Animation> animation() {
+        if (animation == null)
+            animation = new Value<Animation>();
+        return animation;
     }
 
     @Override
@@ -150,6 +159,7 @@ class ChartImpl extends OptionBase implements Highcharts.Options.Chart {
     @Override
     protected void writeJsonOutput(JSONObject json) {
         writeValue(json, "alignTicks", alignTicks);
+        writeValue(json, "animation", animation);
         writeValue(json, "backgroundColor", backgroundColor);
         writeValue(json, "borderColor", borderColor);
         writeValue(json, "borderRadius", borderRadius);

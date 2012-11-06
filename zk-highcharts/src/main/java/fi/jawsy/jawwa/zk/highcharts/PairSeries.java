@@ -1,7 +1,6 @@
 package fi.jawsy.jawwa.zk.highcharts;
 
 import java.io.Serializable;
-import java.util.List;
 
 import lombok.Data;
 import lombok.val;
@@ -9,17 +8,11 @@ import lombok.val;
 import org.zkoss.json.JSONArray;
 import org.zkoss.json.JSONAware;
 
-import com.google.common.collect.ForwardingList;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
-
 import fi.jawsy.jawwa.zk.highcharts.PairSeries.Pair;
 
-public class PairSeries extends ForwardingList<Pair> implements HighchartsSeries<Pair>, Serializable {
+public class PairSeries extends SeriesBase<Pair> {
 
     private static final long serialVersionUID = -5203374458170549183L;
-
-    private final List<Pair> data = Lists.newArrayList();
 
     @Data
     public static final class Pair implements JSONAware, Serializable {
@@ -46,18 +39,8 @@ public class PairSeries extends ForwardingList<Pair> implements HighchartsSeries
 
     }
 
-    @Override
-    protected List<Pair> delegate() {
-        return data;
-    }
-
     public boolean add(double x, double y) {
         return add(new Pair(x, y));
-    }
-
-    @Override
-    public String toString() {
-        return Iterables.toString(data);
     }
 
 }

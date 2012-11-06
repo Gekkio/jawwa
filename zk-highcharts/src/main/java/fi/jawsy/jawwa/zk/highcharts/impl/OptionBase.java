@@ -1,7 +1,9 @@
 package fi.jawsy.jawwa.zk.highcharts.impl;
 
+import java.util.List;
 import java.util.Map;
 
+import org.zkoss.json.JSONArray;
 import org.zkoss.json.JSONAware;
 import org.zkoss.json.JSONObject;
 
@@ -43,6 +45,13 @@ abstract class OptionBase implements RawJson, RawJsonSupport, JSONAware {
         JSONObject jsonMap = new JSONObject();
         jsonMap.putAll(values);
         rawJson.put(key, jsonMap);
+    }
+
+    @Override
+    public void put(String key, List<? extends JSONAware> values) {
+        JSONArray jsonArray = new JSONArray();
+        jsonArray.addAll(values);
+        rawJson.put(key, jsonArray);
     }
 
     @Override
