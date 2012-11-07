@@ -4,12 +4,10 @@
 	<language-name>xul/html</language-name>
 
 	<version>
-		<zk-version>5.0.0</zk-version>
+		<zk-version>6.0.0</zk-version>
 	</version>
 
-	<javascript src="~./jawwa/ext/highcharts/js/highcharts.js" />
-
-	<javascript package="jawwa.highcharts" />
+	<javascript package="jawwa.highcharts" ondemand="true" />
 
 	<component>
 		<component-name>highcharts</component-name>

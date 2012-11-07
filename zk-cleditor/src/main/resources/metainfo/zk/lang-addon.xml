@@ -4,13 +4,12 @@
 	<language-name>xul/html</language-name>
 
 	<version>
-		<zk-version>5.0.0</zk-version>
+		<zk-version>6.0.0</zk-version>
 	</version>
 
-	<javascript src="~./jawwa/ext/cleditor/jquery.cleditor.min.js" />
-	<stylesheet href="~./jawwa/ext/cleditor/jquery.cleditor.css" type="text/css" />
+	<stylesheet href="~./jawwa/ext/cleditor-1.3.0-gekkio/jquery.cleditor.css" type="text/css" />
 
-	<javascript package="jawwa.cleditor" />
+	<javascript package="jawwa.cleditor" ondemand="true" />
 
 	<component>
 		<component-name>cleditor</component-name>

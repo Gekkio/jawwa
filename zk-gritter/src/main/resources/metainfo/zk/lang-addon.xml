@@ -4,9 +4,11 @@
 	<language-name>xul/html</language-name>
 
 	<version>
-		<zk-version>5.0.0</zk-version>
+		<zk-version>6.0.0</zk-version>
 	</version>
 
-	<javascript src="~./jawwa/ext/gritter/js/jquery.gritter.min.js" />
-	<stylesheet href="~./jawwa/ext/gritter/css/jquery.gritter.css" type="text/css" />
+	<stylesheet href="~./jawwa/ext/gritter-1.6/css/jquery.gritter.css" type="text/css" />
+
+	<javascript package="jawwa.gritter" />
+
 </language-addon>

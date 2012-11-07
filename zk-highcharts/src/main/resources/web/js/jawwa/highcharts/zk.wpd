@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <package name="jawwa.highcharts" language="xul/html" depends="zul">
+	<script src="~./jawwa/ext/highcharts-2.3.3/js/highcharts.js" />
 	<widget name="Highcharts" />
 </package>

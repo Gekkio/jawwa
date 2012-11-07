@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package name="jawwa.gritter" language="xul/html" depends="zul">
+	<script src="~./jawwa/ext/gritter-1.6/js/jquery.gritter.js" />
+</package>

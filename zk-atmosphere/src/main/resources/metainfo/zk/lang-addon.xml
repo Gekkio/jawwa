@@ -3,5 +3,10 @@
 	<addon-name>jawwa-zk-atmosphere</addon-name>
 	<language-name>xul/html</language-name>
 
-	<javascript package="jawwa.atmosphere" merge="true" />
+	<version>
+		<zk-version>6.0.0</zk-version>
+	</version>
+
+	<javascript package="jawwa.atmosphere" />
+
 </language-addon>
