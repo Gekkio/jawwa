@@ -15,6 +15,7 @@
 		<module>zk</module>
 		<module>zk-atmosphere</module>
 		<module>zk-cleditor</module>
+		<module>zk-fastclick</module>
 		<module>zk-frp</module>
 		<module>zk-gritter</module>
 		<module>zk-highcharts</module>
