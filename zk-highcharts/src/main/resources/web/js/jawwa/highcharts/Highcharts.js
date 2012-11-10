@@ -44,7 +44,7 @@ jawwa.highcharts.Highcharts = zk.$extends(zul.wgt.Div, {
       if (this._dirtyOptions) {
         this._redrawChart();
       } else if (this._dirtySeries) {
-        this._redrawSeries();
+        this._redrawChart();
       } else if (this._dirtyDelta) {
         this._applyDelta();
       }
@@ -74,17 +74,6 @@ jawwa.highcharts.Highcharts = zk.$extends(zul.wgt.Div, {
     }
 
     this._chart = new Highcharts.Chart(options);
-  },
-  _redrawSeries: function() {
-    var series = this._chart.series[0];
-    while (series) {
-      series.remove(false);
-      series = this._chart.series[0];
-    }
-    for ( var i = 0, len = this.series.length; i < len; i++) {
-      this._chart.addSeries(this.series[i], false);
-    }
-    this._chart.redraw();
   },
   _applyDelta: function() {
     for ( var i = 0, len = this._delta.length; i < len; i++) {
