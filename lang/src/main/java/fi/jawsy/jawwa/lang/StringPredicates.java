@@ -12,8 +12,10 @@ public final class StringPredicates {
     private StringPredicates() {
     }
 
-    private static class IsEmptyPredicate implements Predicate<String>, Serializable {
+    static class IsEmptyPredicate implements Predicate<String>, Serializable {
         private static final long serialVersionUID = -1705328419251983539L;
+
+        public static final IsEmptyPredicate INSTANCE = new IsEmptyPredicate();
 
         @Override
         public boolean apply(String input) {
@@ -21,10 +23,8 @@ public final class StringPredicates {
         }
     }
 
-    private static final IsEmptyPredicate IS_EMPTY = new IsEmptyPredicate();
-
     public static Predicate<? super String> isEmpty() {
-        return IS_EMPTY;
+        return IsEmptyPredicate.INSTANCE;
     }
 
 }
