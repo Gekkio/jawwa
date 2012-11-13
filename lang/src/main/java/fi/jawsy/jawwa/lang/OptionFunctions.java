@@ -24,6 +24,11 @@ public final class OptionFunctions {
         }
     }
 
+    /**
+     * Returns a function that calls getValue() on input values.
+     * 
+     * @return function
+     */
     @SuppressWarnings("unchecked")
     public static <T> Function<Option<? extends T>, T> getValue() {
         return GetValueFunction.INSTANCE;
@@ -41,6 +46,11 @@ public final class OptionFunctions {
         }
     }
 
+    /**
+     * Returns a function that calls Option.option() on input values effectively wrapping them into Option objects.
+     * 
+     * @return function
+     */
     @SuppressWarnings("unchecked")
     public static <T> Function<T, Option<T>> option() {
         return OptionFunction.INSTANCE;

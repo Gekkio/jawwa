@@ -23,6 +23,11 @@ public final class StringPredicates {
         }
     }
 
+    /**
+     * Returns a predicate that calls isEmpty() on input values.
+     * 
+     * @return predicate
+     */
     public static Predicate<? super String> isEmpty() {
         return IsEmptyPredicate.INSTANCE;
     }

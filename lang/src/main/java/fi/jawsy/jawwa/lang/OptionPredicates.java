@@ -25,6 +25,11 @@ public final class OptionPredicates {
 
     }
 
+    /**
+     * Returns a predicate that calls isDefined() on input values.
+     * 
+     * @return predicate
+     */
     public static final Predicate<? super Option<?>> isDefined() {
         return IsDefinedPredicate.INSTANCE;
     }
