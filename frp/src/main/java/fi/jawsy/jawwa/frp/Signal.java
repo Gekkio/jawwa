@@ -22,8 +22,6 @@ public interface Signal<T> {
 
     <U> Signal<U> map(U constant);
 
-    <U> Signal<U> map(Signal<U> s);
-
     <U> Signal<U> map(Supplier<U> s);
 
     <U> Signal<U> flatMap(Function<? super T, Signal<U>> f);

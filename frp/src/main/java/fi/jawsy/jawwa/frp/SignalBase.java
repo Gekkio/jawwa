@@ -60,11 +60,6 @@ public abstract class SignalBase<T> implements Signal<T>, Serializable, Supplier
     }
 
     @Override
-    public <U> Signal<U> map(Signal<U> s) {
-        return map(s.asSupplier());
-    }
-
-    @Override
     public <U> Signal<U> flatMap(final Function<? super T, Signal<U>> f) {
         class FlatMappedSignal extends SignalBase<U> {
             private static final long serialVersionUID = -6722902423420227469L;
