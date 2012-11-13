@@ -9,17 +9,26 @@ import java.util.concurrent.atomic.AtomicReference;
 import com.google.common.base.Function;
 import com.google.common.base.Functions;
 import com.google.common.base.Objects;
+import com.google.common.base.Preconditions;
 import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
 
 import fi.jawsy.jawwa.lang.Effect;
 
+/**
+ * Base class for event stream implementations
+ * 
+ * @param <E>
+ *            event type
+ */
 public abstract class EventStreamBase<E> implements EventStream<E>, Serializable {
 
     private static final long serialVersionUID = 4389299638075146452L;
 
     @Override
     public <U> EventStream<U> collect(final Predicate<? super E> p, final Function<? super E, U> f) {
+        Preconditions.checkNotNull(p, "predicate cannot be null");
+        Preconditions.checkNotNull(f, "function cannot be null");
         class CollectedEventStream extends EventStreamBase<U> {
             private static final long serialVersionUID = 8812050218207235799L;
 
@@ -49,6 +58,7 @@ public abstract class EventStreamBase<E> implements EventStream<E>, Serializable
 
     @Override
     public <U> EventStream<U> map(final Function<? super E, U> mapper) {
+        Preconditions.checkNotNull(mapper, "function cannot be null");
         class MappedEventStream extends EventStreamBase<U> {
             private static final long serialVersionUID = 8746853070424352228L;
 
@@ -76,16 +86,19 @@ public abstract class EventStreamBase<E> implements EventStream<E>, Serializable
 
     @Override
     public <U> EventStream<U> map(Supplier<U> s) {
+        Preconditions.checkNotNull(s, "supplier cannot be null");
         return map(Functions.forSupplier(s));
     }
 
     @Override
     public <U> EventStream<U> map(Signal<U> s) {
+        Preconditions.checkNotNull(s, "signal cannot be null");
         return map(Functions.forSupplier(s.asSupplier()));
     }
 
     @Override
     public EventStream<E> filter(final Predicate<? super E> p) {
+        Preconditions.checkNotNull(p, "predicate cannot be null");
         class FilteredEventStream extends EventStreamBase<E> {
             private static final long serialVersionUID = 2518677092062764830L;
 
@@ -110,6 +123,7 @@ public abstract class EventStreamBase<E> implements EventStream<E>, Serializable
 
     @Override
     public <U> EventStream<U> flatMap(final Function<? super E, EventStream<U>> f) {
+        Preconditions.checkNotNull(f, "function cannot be null");
         class FlatMappedEventStream extends EventStreamBase<U> {
             private static final long serialVersionUID = -1662566691398092407L;
 
@@ -196,6 +210,7 @@ public abstract class EventStreamBase<E> implements EventStream<E>, Serializable
 
     @Override
     public Signal<E> hold(E initial, CancellationToken token) {
+        Preconditions.checkNotNull(token, "token cannot be null");
         final Signal.Var<E> s = new Signal.Var<E>(initial);
         pipeTo(s, token);
         return s;
@@ -203,6 +218,7 @@ public abstract class EventStreamBase<E> implements EventStream<E>, Serializable
 
     @Override
     public EventStream<E> drop(final int amount) {
+        Preconditions.checkArgument(amount >= 0, "amount must be positive");
         class DropEventStream extends EventStreamBase<E> {
             private static final long serialVersionUID = 4078126696318463072L;
 
@@ -232,6 +248,7 @@ public abstract class EventStreamBase<E> implements EventStream<E>, Serializable
 
     @Override
     public EventStream<E> take(final int amount) {
+        Preconditions.checkArgument(amount >= 0, "amount must be positive");
         class TakeEventStream extends EventStreamBase<E> {
             private static final long serialVersionUID = -487977136605864409L;
 
@@ -261,6 +278,7 @@ public abstract class EventStreamBase<E> implements EventStream<E>, Serializable
 
     @Override
     public EventStream<E> dropUntil(final EventStream<?> es) {
+        Preconditions.checkNotNull(es, "event stream cannot be null");
         class DropUntilEventStream extends EventStreamBase<E> {
             private static final long serialVersionUID = -2737049603737761556L;
 
@@ -318,6 +336,7 @@ public abstract class EventStreamBase<E> implements EventStream<E>, Serializable
 
     @Override
     public EventStream<E> takeUntil(final EventStream<?> es) {
+        Preconditions.checkNotNull(es, "event stream cannot be null");
         class TakeUntilEventStream extends EventStreamBase<E> {
             private static final long serialVersionUID = -2779911717822153295L;
 
@@ -401,6 +420,7 @@ public abstract class EventStreamBase<E> implements EventStream<E>, Serializable
 
     @Override
     public EventStream<E> asynchronous(final Executor executor) {
+        Preconditions.checkNotNull(executor, "executor cannot be null");
         class AsynchronousEventStream extends EventStreamBase<E> {
             private static final long serialVersionUID = 7220127200602223002L;
 
@@ -430,6 +450,7 @@ public abstract class EventStreamBase<E> implements EventStream<E>, Serializable
 
     @Override
     public EventStream<E> takeWhile(final Predicate<? super E> p) {
+        Preconditions.checkNotNull(p, "predicate cannot be null");
         class TakeWhileEventStream extends EventStreamBase<E> {
 
             private static final long serialVersionUID = -6796045368801928080L;
@@ -462,6 +483,8 @@ public abstract class EventStreamBase<E> implements EventStream<E>, Serializable
 
     @Override
     public EventStream<E> pipeTo(final EventSink<? super E> sink, CancellationToken token) {
+        Preconditions.checkNotNull(sink, "sink cannot be null");
+        Preconditions.checkNotNull(token, "token cannot be null");
         return foreach(new Effect<E>() {
             @Override
             public void apply(E input) {

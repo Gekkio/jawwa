@@ -8,32 +8,136 @@ import com.google.common.base.Function;
 import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableList;
 
+/**
+ * Mutable state container that tracks the current value, and publishes value changes using event streams.
+ * 
+ * All default implementations of signals are thread-safe.
+ * 
+ * @param <T>
+ *            value type
+ */
 public interface Signal<T> {
 
+    /**
+     * Converts this signal to a supplier that always returns the current signal value.
+     * 
+     * @return supplier
+     */
     Supplier<T> asSupplier();
 
+    /**
+     * Returns an event stream that publishes the current value immediately when a subscription is added, and tracks
+     * changes after that.
+     * 
+     * @return event stream
+     */
     EventStream<T> nowAndChange();
 
+    /**
+     * Returns the current value of the signal.
+     * 
+     * @return value
+     */
     T now();
 
+    /**
+     * Returns an event stream that will track the changes of this signal.
+     * 
+     * @return value
+     */
     EventStream<T> change();
 
+    /**
+     * Returns a new signal that applies the given function to current and future values.
+     * 
+     * @param f
+     *            non-null function
+     * @return signal
+     */
     <U> Signal<U> map(Function<? super T, U> f);
 
+    /**
+     * Returns a new signal that replaces all values with the given constant.
+     * 
+     * @param constant
+     *            constant value
+     * @return signal
+     */
     <U> Signal<U> map(U constant);
 
+    /**
+     * Returns a new signal that replaces all values with values returned by the given supplier.
+     * 
+     * @param s
+     *            non-null value supplier
+     * @return signal
+     */
     <U> Signal<U> map(Supplier<U> s);
 
+    /**
+     * Returns a new signal that implements signal switching. The returned signal will always be connected to the signal
+     * returned by the last invocation of the given function.
+     * 
+     * @param f
+     *            non-null function
+     * @return signal
+     */
     <U> Signal<U> flatMap(Function<? super T, Signal<U>> f);
 
+    /**
+     * Returns a new signal that collects the current and all future values into an immutable list with no size bound.
+     * 
+     * <b>Creates a subscription, so this method has a side effect.</b> The subscription is never removed, so memory
+     * leaks may occur depending on the type of the signal.
+     * 
+     * @return signal
+     */
     Signal<ImmutableList<T>> sequence();
 
+    /**
+     * Returns a new signal that collects the current and all future values into an immutable list with no size bound.
+     * 
+     * <b>Creates a subscription, so this method has a side effect.</b> The subscription is removed when the given token
+     * is cancelled.
+     * 
+     * @param token
+     *            non-null cancellation token
+     * @return signal
+     */
     Signal<ImmutableList<T>> sequence(CancellationToken token);
 
+    /**
+     * Returns a new signal that collects current and future values into an immutable list with specific maximum size.
+     * 
+     * <b>Creates a subscription, so this method has a side effect.</b> The subscription is never removed, so memory
+     * leaks may occur depending on the type of the signal.
+     * 
+     * @param windowSize
+     *            positive window size
+     * @return signal
+     */
     Signal<ImmutableList<T>> sequence(int windowSize);
 
+    /**
+     * Returns a new signal that collects current and future values into an immutable list with specific maximum size.
+     * 
+     * <b>Creates a subscription, so this method has a side effect.</b> The subscription is removed when the given token
+     * is cancelled.
+     * 
+     * @param windowSize
+     *            positive window size
+     * @param token
+     *            non-null cancellation token
+     * @return signal
+     */
     Signal<ImmutableList<T>> sequence(int windowSize, CancellationToken token);
 
+    /**
+     * An immutable signal whose value never changes.
+     * 
+     * @param <T>
+     *            value type
+     */
     @RequiredArgsConstructor
     public static class Val<T> extends SignalBase<T> {
 
@@ -51,6 +155,13 @@ public interface Signal<T> {
             return EventStreams.empty();
         }
 
+        /**
+         * Creates a new immutable signal with the given initial value.
+         * 
+         * @param initial
+         *            initial value
+         * @return immutable signal
+         */
         public static <T> Signal.Val<T> create(T value) {
             return new Signal.Val<T>(value);
         }
@@ -62,6 +173,14 @@ public interface Signal<T> {
 
     }
 
+    /**
+     * A mutable signal whose value can change. Also functions as an event sink.
+     * 
+     * This class is thread-safe.
+     * 
+     * @param <T>
+     *            value type
+     */
     public static class Var<T> extends SignalBase<T> implements EventSink<T> {
         private static final long serialVersionUID = 669403298523450091L;
 
@@ -87,11 +206,26 @@ public interface Signal<T> {
             update(value);
         }
 
-        public void update(T value) {
-            this.value.set(value);
+        /**
+         * Updates the signal with the new value, publishes it to all subscribers, and returns the old value.
+         * 
+         * @param value
+         *            new value
+         * @return old value
+         */
+        public T update(T value) {
+            T old = this.value.getAndSet(value);
             eventSource.fire(value);
+            return old;
         }
 
+        /**
+         * Creates a new mutable signal with the given initial value.
+         * 
+         * @param initial
+         *            initial value
+         * @return mutable signal
+         */
         public static <T> Signal.Var<T> create(T initial) {
             return new Signal.Var<T>(initial);
         }

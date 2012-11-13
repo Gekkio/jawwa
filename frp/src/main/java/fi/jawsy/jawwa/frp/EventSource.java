@@ -5,6 +5,14 @@ import com.google.common.collect.ImmutableSet;
 
 import fi.jawsy.jawwa.lang.Effect;
 
+/**
+ * An event stream implementation that also functions as an event sink.
+ * 
+ * This class is thread-safe.
+ * 
+ * @param <E>
+ *            event type
+ */
 public class EventSource<E> extends EventStreamBase<E> implements EventSink<E> {
 
     private static final long serialVersionUID = -2046636095523847664L;
@@ -54,6 +62,11 @@ public class EventSource<E> extends EventStreamBase<E> implements EventSink<E> {
         }
     }
 
+    /**
+     * Creates a new event source.
+     * 
+     * @return event source
+     */
     public static <E> EventSource<E> create() {
         return new EventSource<E>();
     }
@@ -65,6 +78,11 @@ public class EventSource<E> extends EventStreamBase<E> implements EventSink<E> {
         }
     }
 
+    /**
+     * Checks if any listeners are registered
+     * 
+     * @return boolean
+     */
     public boolean hasListeners() {
         return !listeners.isEmpty();
     }

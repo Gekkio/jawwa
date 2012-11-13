@@ -8,8 +8,14 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 
+/**
+ * A mutable cancellation token that can be cancelled manually.
+ * 
+ * This class is thread-safe.
+ */
 public class CancellationTokenSource implements CancellationToken, Serializable {
 
     private static final Logger log = LoggerFactory.getLogger(CancellationTokenSource.class);
@@ -22,6 +28,7 @@ public class CancellationTokenSource implements CancellationToken, Serializable 
 
     @Override
     public void onCancel(Runnable callback) {
+        Preconditions.checkNotNull(callback, "callback cannot be null");
         if (!cancelled.get()) {
             synchronized (this) {
                 if (!cancelled.get())
@@ -35,6 +42,10 @@ public class CancellationTokenSource implements CancellationToken, Serializable 
         return cancelled.get();
     }
 
+    /**
+     * Cancels the token. This method is idempotent, so multiple invocations are safe and callbacks are guaranteed to
+     * execute only once.
+     */
     public void cancel() {
         if (cancelled.compareAndSet(false, true)) {
             synchronized (this) {

@@ -12,6 +12,12 @@ import com.google.common.collect.ImmutableList;
 
 import fi.jawsy.jawwa.lang.Effect;
 
+/**
+ * Base class for signal implementations.
+ * 
+ * @param <T>
+ *            value type
+ */
 public abstract class SignalBase<T> implements Signal<T>, Serializable, Supplier<T> {
 
     private static final long serialVersionUID = -8545700156708474986L;
@@ -33,6 +39,7 @@ public abstract class SignalBase<T> implements Signal<T>, Serializable, Supplier
 
     @Override
     public <U> Signal<U> map(final Function<? super T, U> f) {
+        Preconditions.checkNotNull(f, "function cannot be null");
         class MappedSignal extends SignalBase<U> {
             private static final long serialVersionUID = -3228645957665057772L;
 
@@ -51,6 +58,7 @@ public abstract class SignalBase<T> implements Signal<T>, Serializable, Supplier
 
     @Override
     public <U> Signal<U> map(Supplier<U> s) {
+        Preconditions.checkNotNull(s, "supplier cannot be null");
         return map(Functions.forSupplier(s));
     }
 
@@ -61,6 +69,7 @@ public abstract class SignalBase<T> implements Signal<T>, Serializable, Supplier
 
     @Override
     public <U> Signal<U> flatMap(final Function<? super T, Signal<U>> f) {
+        Preconditions.checkNotNull(f, "function cannot be null");
         class FlatMappedSignal extends SignalBase<U> {
             private static final long serialVersionUID = -6722902423420227469L;
 
@@ -123,6 +132,7 @@ public abstract class SignalBase<T> implements Signal<T>, Serializable, Supplier
     }
 
     private Signal<ImmutableList<T>> sequenceInternal(final int windowSize, CancellationToken token) {
+        Preconditions.checkNotNull(token, "cancellation token cannot be null");
         final AtomicReference<ImmutableList<T>> data = new AtomicReference<ImmutableList<T>>(ImmutableList.<T> of());
         final EventSource<ImmutableList<T>> change = new EventSource<ImmutableList<T>>();
 
