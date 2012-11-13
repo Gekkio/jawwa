@@ -10,6 +10,8 @@ import fi.jawsy.jawwa.lang.Effect;
 
 public interface EventStream<T> {
 
+    <U> EventStream<U> collect(Predicate<? super T> p, Function<? super T, U> f);
+
     EventStream<T> foreach(Effect<? super T> e);
 
     EventStream<T> foreach(Effect<? super T> e, CancellationToken token);

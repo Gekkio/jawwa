@@ -19,6 +19,30 @@ public abstract class EventStreamBase<E> implements EventStream<E>, Serializable
     private static final long serialVersionUID = 4389299638075146452L;
 
     @Override
+    public <U> EventStream<U> collect(final Predicate<? super E> p, final Function<? super E, U> f) {
+        class CollectedEventStream extends EventStreamBase<U> {
+            private static final long serialVersionUID = 8812050218207235799L;
+
+            @Override
+            public EventStream<U> foreach(final Effect<? super U> e, CancellationToken token) {
+                class CollectEffect implements Effect<E>, Serializable {
+                    private static final long serialVersionUID = 4774072719190672139L;
+
+                    @Override
+                    public void apply(E input) {
+                        if (p.apply(input))
+                            e.apply(f.apply(input));
+                    }
+                }
+                EventStreamBase.this.foreach(new CollectEffect(), token);
+                return this;
+            }
+
+        }
+        return new CollectedEventStream();
+    }
+
+    @Override
     public EventStream<E> foreach(Effect<? super E> e) {
         return foreach(e, CancellationToken.NONE);
     }
