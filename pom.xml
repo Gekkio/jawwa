@@ -39,7 +39,7 @@
 		<zk.version>6.5.0</zk.version>
 
 		<maven.clean.version>2.5</maven.clean.version>
-		<maven.compiler.version>2.5</maven.compiler.version>
+		<maven.compiler.version>2.5.1</maven.compiler.version>
 		<maven.findbugs.version>2.5.2</maven.findbugs.version>
 		<maven.install.version>2.4</maven.install.version>
 		<maven.jar.version>2.4</maven.jar.version>
