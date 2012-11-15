@@ -262,11 +262,30 @@ public abstract class Option<T> implements Iterable<T>, Serializable {
     public abstract T getOrElse(T defaultValue);
 
     /**
-     * Returns the value in the container or if the container is empty, returns null
+     * Returns the value in the container or if the container is empty, returns null.
      * 
      * @return value from container or null
      */
     public abstract T getOrNull();
+
+    /**
+     * Returns the value in the container or if the container is empty, throws the given exception.
+     * 
+     * @throws RuntimeException
+     *             if the container is empty
+     * @return value from container
+     */
+    public abstract T getOrThrow(RuntimeException e);
+
+    /**
+     * Returns the value in the container or if the container is empty, throws an UnsupportedOperationException with the
+     * given message.
+     * 
+     * @throws UnsupportedOperationException
+     *             if the container is empty
+     * @return value from container
+     */
+    public abstract T getOrThrow(String msg);
 
     /**
      * Returns the value in the container or throws an exception.
@@ -370,6 +389,7 @@ public abstract class Option<T> implements Iterable<T>, Serializable {
             return defaultValueSupplier.get();
         }
 
+        @Override
         public T getOrElse(final T defaultValue) {
             Preconditions.checkNotNull(defaultValue, "defaultValue cannot be null");
             return defaultValue;
@@ -378,6 +398,16 @@ public abstract class Option<T> implements Iterable<T>, Serializable {
         @Override
         public T getOrNull() {
             return null;
+        }
+
+        @Override
+        public T getOrThrow(RuntimeException e) {
+            throw e;
+        }
+
+        @Override
+        public T getOrThrow(String msg) {
+            throw new UnsupportedOperationException(msg);
         }
 
         @Override
@@ -429,6 +459,7 @@ public abstract class Option<T> implements Iterable<T>, Serializable {
         /**
          * Always returns rightValue wrapped in Right.
          */
+        @Override
         public <R> Either<T, R> toLeft(R rightValue) {
             return Either.right(rightValue);
         }
@@ -436,6 +467,7 @@ public abstract class Option<T> implements Iterable<T>, Serializable {
         /**
          * Always returns leftValue wrapped in Left.
          */
+        @Override
         public <L> Either<L, T> toRight(L leftValue) {
             return Either.left(leftValue);
         }
@@ -497,6 +529,17 @@ public abstract class Option<T> implements Iterable<T>, Serializable {
             return value;
         }
 
+        @Override
+        public T getOrThrow(RuntimeException e) {
+            return value;
+        }
+
+        @Override
+        public T getOrThrow(String msg) {
+            return value;
+        }
+
+        @Override
         public T getValue() {
             return value;
         }
@@ -512,6 +555,7 @@ public abstract class Option<T> implements Iterable<T>, Serializable {
         /**
          * Returns an iterator that contains the underlying value.
          */
+        @Override
         public Iterator<T> iterator() {
             return Iterators.singletonIterator(value);
         }
