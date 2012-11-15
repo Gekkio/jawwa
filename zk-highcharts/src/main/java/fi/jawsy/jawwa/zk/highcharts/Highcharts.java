@@ -24,7 +24,7 @@ public class Highcharts extends Div {
 
     private static final long serialVersionUID = -7849878366560709958L;
 
-    private Options options;
+    private Options options = createOptions();
 
     private ArrayList<HighchartsSeries<?>> series = Lists.newArrayList();
 
