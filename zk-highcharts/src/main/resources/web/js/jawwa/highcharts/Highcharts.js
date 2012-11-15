@@ -42,6 +42,8 @@ jawwa.highcharts.Highcharts = zk.$extends(zul.wgt.Div, {
   onResponse: function() {
     if (this.desktop) {
       if (this._dirtyOptions) {
+        if (this._dirtyDelta)
+          this._applyOriginalDelta();
         this._redrawChart();
       } else if (this._dirtySeries) {
         this._redrawChart();
@@ -109,6 +111,42 @@ jawwa.highcharts.Highcharts = zk.$extends(zul.wgt.Div, {
       }
     }
     this._chart.redraw();
+  },
+  _applyOriginalDelta: function() {
+    for ( var i = 0, len = this._delta.length; i < len; i++) {
+      var seriesDelta = this._delta[i];
+
+      if (typeof seriesDelta !== 'undefined') {
+        var series = this.series[i]
+
+        if (typeof series !== 'undefined') {
+          for ( var j = 0, len2 = seriesDelta.length; j < len2; j++) {
+            var delta = seriesDelta[j];
+
+            if (delta.type === 'clear') {
+              series.length = 0;
+            } else if (delta.type === 'append') {
+              series.push(delta.point);
+            } else if (delta.type === 'add') {
+              var index = delta.index;
+              if (index === series.length) {
+                series.push(delta.point);
+              } else {
+                series.push(series[series.length - 1]);
+                for ( var k = (series.length - 1); k >= index; k--) {
+                  series[k + 1] = series[k];
+                }
+                series[index] = delta.point;
+              }
+            } else if (delta.type === 'replace') {
+              series[delta.index] = delta.point;
+            } else if (delta.type === 'remove') {
+              series.splice(delta.index);
+            }
+          }
+        }
+      }
+    }
   },
   _destroy: function() {
     if (this._chart) {
