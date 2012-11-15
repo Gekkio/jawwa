@@ -8,6 +8,7 @@ import java.util.Map;
 
 import org.zkoss.json.JSONAware;
 import org.zkoss.json.JSONObject;
+import org.zkoss.json.JavaScriptValue;
 import org.zkoss.zk.ui.sys.ContentRenderer;
 import org.zkoss.zul.Div;
 
@@ -73,6 +74,15 @@ public class Highcharts extends Div {
         public void clear() {
             this.value = null;
         }
+
+        public void write(String name, JSONObject json) {
+            if (exists())
+                json.put(name, get());
+        }
+
+        public static <T> Value<T> create() {
+            return new Value<T>();
+        }
     }
 
     public static interface Options extends RawJsonSupport {
@@ -130,6 +140,62 @@ public class Highcharts extends Div {
             Value<Boolean> floating();
 
             Value<VerticalAlign> verticalAlign();
+        }
+
+        public static interface PlotOptions extends RawJsonSupport {
+            public static interface Series extends RawJsonSupport {
+                public static interface DataLabels extends RawJsonSupport {
+                    Value<JavaScriptValue> formatter();
+                }
+
+                Value<Boolean> allowPointSelect();
+
+                Value<Animation> animation();
+
+                Value<Color> color();
+
+                Value<Boolean> connectEnds();
+
+                Value<Boolean> connectNulls();
+
+                Value<Integer> cropThreshold();
+
+                Value<String> cursor();
+
+                Value<Boolean> enableMouseTracking();
+
+                Value<Color> fillColor();
+
+                Value<Double> fillOpacity();
+
+                Value<String> id();
+
+                Value<Integer> lineWidth();
+
+                Value<Double> pointInterval();
+
+                Value<Double> pointStart();
+
+                Value<Boolean> selected();
+
+                Value<Boolean> showCheckbox();
+
+                Value<Boolean> showInLegend();
+
+                Value<Stacking> stacking();
+
+                Value<Boolean> stickyTracking();
+
+                Value<Integer> turboThreshold();
+
+                Value<Boolean> visible();
+
+                Value<Integer> zIndex();
+
+                DataLabels dataLabels();
+            }
+
+            Series series();
         }
 
         public static interface Series extends RawJsonSupport {
@@ -193,6 +259,8 @@ public class Highcharts extends Div {
             Value<Boolean> enabled();
 
             Value<String> footerFormat();
+
+            Value<JavaScriptValue> formatter();
 
             Value<Boolean> shadow();
 
@@ -305,6 +373,8 @@ public class Highcharts extends Div {
 
         Legend legend();
 
+        PlotOptions plotOptions();
+
         Series series(int index);
 
         Subtitle subtitle();
@@ -333,11 +403,19 @@ public class Highcharts extends Div {
             renderer.render("series", series);
     }
 
+    public Options getOptions() {
+        return options;
+    }
+
     public void setOptions(Options options) {
         if (this.options != options) {
             this.options = options;
             smartUpdate("options", options);
         }
+    }
+
+    public void refreshOptions() {
+        smartUpdate("options", options);
     }
 
     public void addSeries(HighchartsSeries<?> series) {

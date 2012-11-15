@@ -65,8 +65,8 @@ abstract class OptionBase implements RawJson, RawJsonSupport, JSONAware {
     }
 
     protected void writeValue(JSONObject json, String name, Value<?> value) {
-        if (value != null && value.exists())
-            json.put(name, value.get());
+        if (value != null)
+            value.write(name, json);
     }
 
     protected abstract void writeJsonOutput(JSONObject json);

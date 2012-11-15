@@ -1,6 +1,7 @@
 package fi.jawsy.jawwa.zk.highcharts.impl;
 
 import org.zkoss.json.JSONObject;
+import org.zkoss.json.JavaScriptValue;
 
 import com.google.common.collect.ImmutableMap;
 
@@ -17,6 +18,7 @@ class TooltipImpl extends OptionBase implements Highcharts.Options.Tooltip {
     private Value<Integer> borderWidth;
     private Value<Boolean> enabled;
     private Value<String> footerFormat;
+    private Value<JavaScriptValue> formatter;
     private Value<Boolean> shadow;
     private Value<Boolean> shared;
     private Value<Integer> snap;
@@ -73,6 +75,13 @@ class TooltipImpl extends OptionBase implements Highcharts.Options.Tooltip {
         if (footerFormat == null)
             footerFormat = new Value<String>();
         return footerFormat;
+    }
+
+    @Override
+    public Value<JavaScriptValue> formatter() {
+        if (formatter == null)
+            formatter = new Value<JavaScriptValue>();
+        return formatter;
     }
 
     @Override
@@ -140,6 +149,7 @@ class TooltipImpl extends OptionBase implements Highcharts.Options.Tooltip {
         writeValue(json, "borderWidth", borderWidth);
         writeValue(json, "enabled", enabled);
         writeValue(json, "footerFormat", footerFormat);
+        writeValue(json, "formatter", formatter);
         writeValue(json, "shadow", shadow);
         writeValue(json, "shared", shared);
         writeValue(json, "snap", snap);

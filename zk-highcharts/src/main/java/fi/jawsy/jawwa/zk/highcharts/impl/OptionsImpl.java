@@ -13,6 +13,7 @@ class OptionsImpl extends OptionBase implements Highcharts.Options {
     private Chart chart;
     private Credits credits;
     private Legend legend;
+    private PlotOptions plotOptions;
     private ArrayList<Series> series = Lists.newArrayList();
     private Subtitle subtitle;
     private Title title;
@@ -39,6 +40,13 @@ class OptionsImpl extends OptionBase implements Highcharts.Options {
         if (legend == null)
             legend = new LegendImpl();
         return legend;
+    }
+
+    @Override
+    public PlotOptions plotOptions() {
+        if (plotOptions == null)
+            plotOptions = new PlotOptionsImpl();
+        return plotOptions;
     }
 
     @Override
@@ -102,6 +110,8 @@ class OptionsImpl extends OptionBase implements Highcharts.Options {
             json.put("credits", credits);
         if (legend != null)
             json.put("legend", legend);
+        if (plotOptions != null)
+            json.put("plotOptions", plotOptions);
         if (!series.isEmpty())
             json.put("series", series);
         if (subtitle != null)

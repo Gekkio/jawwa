@@ -2,8 +2,8 @@ package fi.jawsy.jawwa.zk.highcharts;
 
 import java.io.Serializable;
 
-import lombok.Data;
 import lombok.val;
+import lombok.experimental.Value;
 
 import org.zkoss.json.JSONArray;
 import org.zkoss.json.JSONAware;
@@ -14,7 +14,7 @@ public class PairSeries extends SeriesBase<Pair> {
 
     private static final long serialVersionUID = -5203374458170549183L;
 
-    @Data
+    @Value
     public static final class Pair implements JSONAware, Serializable {
         private static final long serialVersionUID = -6681020912415581259L;
 
