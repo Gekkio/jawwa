@@ -30,7 +30,7 @@ public final class OptionPredicates {
      * 
      * @return predicate
      */
-    public static final Predicate<? super Option<?>> isDefined() {
+    public static Predicate<? super Option<?>> isDefined() {
         return IsDefinedPredicate.INSTANCE;
     }
 
