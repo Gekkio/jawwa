@@ -2,6 +2,8 @@ package fi.jawsy.jawwa.lang;
 
 import java.io.Serializable;
 
+import lombok.RequiredArgsConstructor;
+
 import com.google.common.base.Function;
 
 /**
@@ -49,6 +51,56 @@ public final class Effects {
             }
         }
         return new FromFunctionEffect();
+    }
+
+    @RequiredArgsConstructor
+    static class SystemOutEffect implements Effect<Object>, Serializable {
+
+        private static final long serialVersionUID = 5986895017772281905L;
+
+        public final String prefix;
+
+        public static final SystemOutEffect INSTANCE = new SystemOutEffect("");
+
+        @Override
+        public void apply(Object input) {
+            System.out.print(prefix);
+            System.out.println(input);
+        }
+
+    }
+
+    public static Effect<? super Object> systemOut() {
+        return SystemOutEffect.INSTANCE;
+    }
+
+    public static Effect<? super Object> systemOut(String prefix) {
+        return new SystemOutEffect(prefix);
+    }
+
+    @RequiredArgsConstructor
+    static class SystemErrEffect implements Effect<Object>, Serializable {
+
+        private static final long serialVersionUID = -635378664192791635L;
+
+        public final String prefix;
+
+        public static final SystemErrEffect INSTANCE = new SystemErrEffect("");
+
+        @Override
+        public void apply(Object input) {
+            System.err.print(prefix);
+            System.err.println(input);
+        }
+
+    }
+
+    public static Effect<? super Object> systemErr() {
+        return SystemErrEffect.INSTANCE;
+    }
+
+    public static Effect<? super Object> systemErr(String prefix) {
+        return new SystemErrEffect(prefix);
     }
 
 }
