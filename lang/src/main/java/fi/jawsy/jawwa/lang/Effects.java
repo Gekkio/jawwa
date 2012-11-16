@@ -53,6 +53,39 @@ public final class Effects {
         return new FromFunctionEffect();
     }
 
+    static class NoopEffect implements Effect<Object>, Serializable {
+
+        private static final long serialVersionUID = -6608178536760540031L;
+
+        public static final NoopEffect INSTANCE = new NoopEffect();
+
+        @Override
+        public void apply(Object input) {
+        }
+
+    }
+
+    /**
+     * Returns an effect that does nothing.
+     * 
+     * @return effect
+     */
+    public static Effect<? super Object> noop() {
+        return NoopEffect.INSTANCE;
+    }
+
+    /**
+     * Returns an effect that does nothing.
+     * 
+     * @param clazz
+     *            class of input type (for convenience only)
+     * @return effect
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> Effect<T> noop(Class<T> clazz) {
+        return (Effect<T>) NoopEffect.INSTANCE;
+    }
+
     @RequiredArgsConstructor
     static class SystemOutEffect implements Effect<Object>, Serializable {
 
@@ -70,10 +103,20 @@ public final class Effects {
 
     }
 
+    /**
+     * Returns an effect that logs the input to System.out.
+     * 
+     * @return effect
+     */
     public static Effect<? super Object> systemOut() {
         return SystemOutEffect.INSTANCE;
     }
 
+    /**
+     * Returns an effect that logs the input to System.out with the given prefix string.
+     * 
+     * @return effect
+     */
     public static Effect<? super Object> systemOut(String prefix) {
         return new SystemOutEffect(prefix);
     }
@@ -95,10 +138,20 @@ public final class Effects {
 
     }
 
+    /**
+     * Returns an effect that logs the input to System.err.
+     * 
+     * @return effect
+     */
     public static Effect<? super Object> systemErr() {
         return SystemErrEffect.INSTANCE;
     }
 
+    /**
+     * Returns an effect that logs the input to System.err with the given prefix string.
+     * 
+     * @return effect
+     */
     public static Effect<? super Object> systemErr(String prefix) {
         return new SystemErrEffect(prefix);
     }
