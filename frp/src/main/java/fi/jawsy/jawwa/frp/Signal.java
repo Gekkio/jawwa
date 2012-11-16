@@ -158,8 +158,8 @@ public interface Signal<T> {
         /**
          * Creates a new immutable signal with the given initial value.
          * 
-         * @param initial
-         *            initial value
+         * @param value
+         *            value
          * @return immutable signal
          */
         public static <T> Signal.Val<T> create(T value) {

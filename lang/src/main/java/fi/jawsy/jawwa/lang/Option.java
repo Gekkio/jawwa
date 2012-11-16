@@ -216,7 +216,7 @@ public abstract class Option<T> implements Iterable<T>, Serializable {
      * Filters the container based on a boolean value. This means that if the container contains a value, it will be
      * retained only if the given parameter is true.
      * 
-     * @param value
+     * @param predicate
      *            boolean predicate
      * @return filtered container
      */
@@ -317,7 +317,7 @@ public abstract class Option<T> implements Iterable<T>, Serializable {
     /**
      * Returns the container or if the container is empty, returns the given parameter.
      * 
-     * @param defaultValue
+     * @param defaultOption
      *            default value
      * @return container or default value
      */

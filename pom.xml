@@ -44,7 +44,9 @@
 		<maven.install.version>2.4</maven.install.version>
 		<maven.jar.version>2.4</maven.jar.version>
 		<maven.javadoc.version>2.9</maven.javadoc.version>
+		<maven.jxr.version>2.3</maven.jxr.version>
 		<maven.pmd.version>2.7.1</maven.pmd.version>
+		<maven.project.info.reports.version>2.6</maven.project.info.reports.version>
 		<maven.resources.version>2.6</maven.resources.version>
 		<maven.site.version>3.2</maven.site.version>
 		<maven.surefire.version>2.12.4</maven.surefire.version>
@@ -309,11 +311,43 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
 				<version>${maven.javadoc.version}</version>
+				<configuration>
+					<links>
+						<link>http://docs.guava-libraries.googlecode.com/git-history/release/javadoc</link>
+						<link>http://www.zkoss.org/javadoc/latest/zk</link>
+						<link>http://metrics.codahale.com/maven/apidocs/</link>
+					</links>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jxr-plugin</artifactId>
+				<version>${maven.jxr.version}</version>
+				<configuration>
+					<aggregate>true</aggregate>
+				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-pmd-plugin</artifactId>
 				<version>${maven.pmd.version}</version>
+				<configuration>
+					<targetJdk>1.6</targetJdk>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-project-info-reports-plugin</artifactId>
+				<version>${maven.project.info.reports.version}</version>
+				<reportSets>
+					<reportSet>
+						<reports>
+							<report>index</report>
+							<report>summary</report>
+							<report>modules</report>
+						</reports>
+					</reportSet>
+				</reportSets>
 			</plugin>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
