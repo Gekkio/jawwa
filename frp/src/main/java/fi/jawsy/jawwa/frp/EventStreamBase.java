@@ -14,6 +14,7 @@ import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
 
 import fi.jawsy.jawwa.lang.Effect;
+import fi.jawsy.jawwa.lang.Effects;
 
 /**
  * Base class for event stream implementations
@@ -54,6 +55,16 @@ public abstract class EventStreamBase<E> implements EventStream<E>, Serializable
     @Override
     public EventStream<E> foreach(Effect<? super E> e) {
         return foreach(e, CancellationToken.NONE);
+    }
+
+    @Override
+    public EventStream<E> foreach(Runnable r) {
+        return foreach(Effects.fromRunnable(r));
+    }
+
+    @Override
+    public EventStream<E> foreach(Runnable r, CancellationToken token) {
+        return foreach(Effects.fromRunnable(r), token);
     }
 
     @Override

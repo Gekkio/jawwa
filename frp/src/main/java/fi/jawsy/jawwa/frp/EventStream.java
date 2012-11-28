@@ -57,6 +57,32 @@ public interface EventStream<T> {
     EventStream<T> foreach(Effect<? super T> e, CancellationToken token);
 
     /**
+     * Runs the given side effect whenever an event is published. Returns this event stream.
+     * 
+     * <b>Creates a subscription, so this method has a side effect.</b> The subscription is never removed, so memory
+     * leaks may occur depending on the type of the event stream.
+     * 
+     * @param r
+     *            non-null side effect
+     * @return event stream
+     */
+    EventStream<T> foreach(Runnable r);
+
+    /**
+     * Runs the given side effect whenever an event is published. Returns this event stream.
+     * 
+     * <b>Creates a subscription, so this method has a side effect.</b> The subscription is removed when the given token
+     * is cancelled.
+     * 
+     * @param r
+     *            non-null side effect
+     * @param token
+     *            non-null cancellation token
+     * @return event stream
+     */
+    EventStream<T> foreach(Runnable r, CancellationToken token);
+
+    /**
      * Returns a new event stream that applies the given function to all event values.
      * 
      * @param f

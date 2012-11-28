@@ -53,6 +53,25 @@ public final class Effects {
         return new FromFunctionEffect();
     }
 
+    /**
+     * Converts a runnable to an effect that discards the input and runs the runnable.
+     * 
+     * @param r
+     *            runnable
+     * @return effect
+     */
+    public static Effect<Object> fromRunnable(final Runnable r) {
+        class FromRunnableEffect implements Effect<Object>, Serializable {
+            private static final long serialVersionUID = 7869061388649838159L;
+
+            @Override
+            public void apply(Object input) {
+                r.run();
+            }
+        }
+        return new FromRunnableEffect();
+    }
+
     static class NoopEffect implements Effect<Object>, Serializable {
 
         private static final long serialVersionUID = -6608178536760540031L;
