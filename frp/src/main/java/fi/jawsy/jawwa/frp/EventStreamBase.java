@@ -102,12 +102,6 @@ public abstract class EventStreamBase<E> implements EventStream<E>, Serializable
     }
 
     @Override
-    public <U> EventStream<U> map(Signal<U> s) {
-        Preconditions.checkNotNull(s, "signal cannot be null");
-        return map(Functions.forSupplier(s.asSupplier()));
-    }
-
-    @Override
     public EventStream<E> filter(final Predicate<? super E> p) {
         Preconditions.checkNotNull(p, "predicate cannot be null");
         class FilteredEventStream extends EventStreamBase<E> {
