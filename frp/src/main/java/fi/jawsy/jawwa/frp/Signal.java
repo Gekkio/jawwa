@@ -209,14 +209,33 @@ public interface Signal<T> {
         /**
          * Updates the signal with the new value, publishes it to all subscribers, and returns the old value.
          * 
-         * @param value
+         * @param newValue
          *            new value
          * @return old value
          */
-        public T update(T value) {
-            T old = this.value.getAndSet(value);
-            eventSource.fire(value);
+        public T update(T newValue) {
+            T old = this.value.getAndSet(newValue);
+            eventSource.fire(newValue);
             return old;
+        }
+
+        /**
+         * Updates the signal using the given updater function. The updater function should be side-effect free, because
+         * it might be called multiple times in high contention scenarios.
+         * 
+         * @param updateFunction
+         *            function that returns a new value given the old value
+         * @return old value
+         */
+        public T update(Function<T, T> updateFunction) {
+            while (true) {
+                T old = this.value.get();
+                T newValue = updateFunction.apply(old);
+                if (this.value.compareAndSet(old, newValue)) {
+                    eventSource.fire(newValue);
+                    return old;
+                }
+            }
         }
 
         /**
