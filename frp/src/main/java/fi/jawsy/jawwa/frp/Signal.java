@@ -235,6 +235,11 @@ public interface Signal<T> {
             return EventStreams.instant(value);
         }
 
+        @Override
+        public Signal<T> distinct() {
+            return this;
+        }
+
     }
 
     /**

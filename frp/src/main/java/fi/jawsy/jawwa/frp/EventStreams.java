@@ -1,9 +1,12 @@
 package fi.jawsy.jawwa.frp;
 
-import java.io.ObjectStreamException;
+import java.io.Serializable;
+import java.util.concurrent.Executor;
 import java.util.concurrent.atomic.AtomicReference;
 
+import com.google.common.base.Function;
 import com.google.common.base.Preconditions;
+import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
 
 import fi.jawsy.jawwa.lang.Effect;
@@ -17,18 +20,120 @@ public final class EventStreams {
     }
 
     @SuppressWarnings("rawtypes")
-    private static final EventStream EMPTY = new EventStreamBase() {
-        private static final long serialVersionUID = 9029795963118549722L;
+    static class EmptyEventStream implements EventStream, Serializable {
+        private static final long serialVersionUID = 5638633110197759582L;
 
-        private Object readResolve() throws ObjectStreamException {
-            return EMPTY;
+        @Override
+        public EventStream collect(Predicate p, Function f) {
+            return this;
+        }
+
+        @Override
+        public EventStream foreach(Effect e) {
+            return this;
         }
 
         @Override
         public EventStream foreach(Effect e, CancellationToken token) {
             return this;
         }
-    };
+
+        @Override
+        public EventStream map(Function f) {
+            return this;
+        }
+
+        @Override
+        public EventStream map(Object constant) {
+            return this;
+        }
+
+        @Override
+        public EventStream map(Supplier s) {
+            return this;
+        }
+
+        @Override
+        public EventStream flatMap(Function f) {
+            return this;
+        }
+
+        @Override
+        public EventStream filter(Predicate p) {
+            return this;
+        }
+
+        @Override
+        public EventStream union(EventStream es) {
+            return this;
+        }
+
+        @Override
+        public EventStream distinct() {
+            return this;
+        }
+
+        @Override
+        public EventStream drop(int amount) {
+            return this;
+        }
+
+        @Override
+        public EventStream dropUntil(EventStream es) {
+            return this;
+        }
+
+        @Override
+        public EventStream take(int amount) {
+            return this;
+        }
+
+        @Override
+        public EventStream takeUntil(EventStream es) {
+            return this;
+        }
+
+        @Override
+        public EventStream takeWhile(Predicate p) {
+            return this;
+        }
+
+        @Override
+        public EventStream synchronize() {
+            return this;
+        }
+
+        @Override
+        public EventStream asynchronous(Executor executor) {
+            return this;
+        }
+
+        @Override
+        public EventStream pipeTo(EventSink sink) {
+            return this;
+        }
+
+        @Override
+        public EventStream pipeTo(EventSink sink, CancellationToken token) {
+            return this;
+        }
+
+        @SuppressWarnings("unchecked")
+        @Override
+        public Signal hold(Object initial) {
+            return new Signal.Val(initial);
+        }
+
+        @SuppressWarnings("unchecked")
+        @Override
+        public Signal hold(Object initial, CancellationToken token) {
+            return new Signal.Val(initial);
+        }
+
+    }
+
+    @SuppressWarnings("rawtypes")
+    private static final EventStream EMPTY = new EmptyEventStream();
 
     /**
      * Returns an event stream that is always empty.
@@ -69,6 +174,11 @@ public final class EventStreams {
                 return this;
             }
 
+            @Override
+            public EventStream<T> distinct() {
+                return this;
+            }
+
         }
         return new InstantEventStream();
     }
@@ -90,6 +200,11 @@ public final class EventStreams {
             public EventStream<T> foreach(Effect<? super T> e, CancellationToken token) {
                 if (!token.isCancelled())
                     e.apply(value.get());
+                return this;
+            }
+
+            @Override
+            public EventStream<T> distinct() {
                 return this;
             }
 
@@ -116,29 +231,12 @@ public final class EventStreams {
                     e.apply(value.get());
                 return this;
             }
-        }
-        return new InstantEventStream();
-    }
-
-    /**
-     * Returns an event stream that immediately publishes the current value of the given signal when a subscription is
-     * added.
-     * 
-     * @param value
-     *            non-null signal
-     * @return event stream
-     */
-    public static <T> EventStream<T> instant(final Signal<T> value) {
-        Preconditions.checkNotNull(value, "signal cannot be null");
-        class InstantEventStream extends EventStreamBase<T> {
-            private static final long serialVersionUID = 1713836073822797296L;
 
             @Override
-            public EventStream<T> foreach(Effect<? super T> e, CancellationToken token) {
-                if (!token.isCancelled())
-                    e.apply(value.now());
+            public EventStream<T> distinct() {
                 return this;
             }
+
         }
         return new InstantEventStream();
     }
