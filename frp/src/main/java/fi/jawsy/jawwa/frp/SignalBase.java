@@ -11,6 +11,10 @@ import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
 
 import fi.jawsy.jawwa.lang.Effect;
+import fi.jawsy.jawwa.lang.Tuple2;
+import fi.jawsy.jawwa.lang.Tuple2Functions;
+import fi.jawsy.jawwa.lang.Tuple3;
+import fi.jawsy.jawwa.lang.Tuple3Functions;
 
 /**
  * Base class for signal implementations.
@@ -164,5 +168,57 @@ public abstract class SignalBase<T> implements Signal<T>, Serializable, Supplier
 
         }
         return new SequenceSignal();
+    }
+
+    @Override
+    public <A> Signal<Tuple2<T, A>> zip(Signal<A> a) {
+        return zip(a, CancellationToken.NONE);
+    }
+
+    @Override
+    public <A> Signal<Tuple2<T, A>> zip(Signal<A> a, CancellationToken token) {
+        final Signal.Var<Tuple2<T, A>> zippedSignal = new Signal.Var<Tuple2<T, A>>(Tuple2.of(this.now(), a.now()));
+        this.change().foreach(new Effect<T>() {
+            @Override
+            public void apply(T input) {
+                zippedSignal.update(Tuple2Functions.<T, A> withA(input));
+            }
+        }, token);
+        a.change().foreach(new Effect<A>() {
+            @Override
+            public void apply(A input) {
+                zippedSignal.update(Tuple2Functions.<T, A> withB(input));
+            }
+        });
+        return zippedSignal;
+    }
+
+    @Override
+    public <A, B> Signal<Tuple3<T, A, B>> zip(Signal<A> a, Signal<B> b) {
+        return zip(a, b, CancellationToken.NONE);
+    }
+
+    @Override
+    public <A, B> Signal<Tuple3<T, A, B>> zip(Signal<A> a, Signal<B> b, CancellationToken token) {
+        final Signal.Var<Tuple3<T, A, B>> zippedSignal = new Signal.Var<Tuple3<T, A, B>>(Tuple3.of(this.now(), a.now(), b.now()));
+        this.change().foreach(new Effect<T>() {
+            @Override
+            public void apply(T input) {
+                zippedSignal.update(Tuple3Functions.<T, A, B> withA(input));
+            }
+        }, token);
+        a.change().foreach(new Effect<A>() {
+            @Override
+            public void apply(A input) {
+                zippedSignal.update(Tuple3Functions.<T, A, B> withB(input));
+            }
+        });
+        b.change().foreach(new Effect<B>() {
+            @Override
+            public void apply(B input) {
+                zippedSignal.update(Tuple3Functions.<T, A, B> withC(input));
+            }
+        });
+        return zippedSignal;
     }
 }

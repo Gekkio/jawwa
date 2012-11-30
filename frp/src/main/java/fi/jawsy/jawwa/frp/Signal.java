@@ -8,6 +8,9 @@ import com.google.common.base.Function;
 import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableList;
 
+import fi.jawsy.jawwa.lang.Tuple2;
+import fi.jawsy.jawwa.lang.Tuple3;
+
 /**
  * Mutable state container that tracks the current value, and publishes value changes using event streams.
  * 
@@ -131,6 +134,60 @@ public interface Signal<T> {
      * @return signal
      */
     Signal<ImmutableList<T>> sequence(int windowSize, CancellationToken token);
+
+    /**
+     * Returns a new signal that tracks the values of this signal and the given signal using a tuple.
+     * 
+     * <b>Creates subscriptions, so this method has a side effect.</b> The subscription is never removed, so memory
+     * leaks may occur depending on the type of the signal.
+     * 
+     * @param a
+     *            second signal
+     * @return signal
+     */
+    <A> Signal<Tuple2<T, A>> zip(Signal<A> a);
+
+    /**
+     * Returns a new signal that tracks the values of this signal and the given signal using a tuple.
+     * 
+     * <b>Creates subscriptions, so this method has side effects.</b> The subscriptions are removed when the given token
+     * is cancelled.
+     * 
+     * @param a
+     *            second signal
+     * @param token
+     *            non-null cancellation token
+     * @return signal
+     */
+    <A> Signal<Tuple2<T, A>> zip(Signal<A> a, CancellationToken token);
+
+    /**
+     * Returns a new signal that tracks the values of this signal and the two given signals using a tuple.
+     * 
+     * <b>Creates subscriptions, so this method has a side effect.</b> The subscription is never removed, so memory
+     * leaks may occur depending on the type of the signal.
+     * 
+     * @param a
+     *            second signal
+     * @param b
+     *            third signal
+     * @return signal
+     */
+    <A, B> Signal<Tuple3<T, A, B>> zip(Signal<A> a, Signal<B> b);
+
+    /**
+     * Returns a new signal that tracks the values of this signal and the two given signals using a tuple.
+     * 
+     * <b>Creates subscriptions, so this method has side effects.</b> The subscriptions are never removed, so memory
+     * leaks may occur depending on the type of the signal.
+     * 
+     * @param a
+     *            second signal
+     * @param b
+     *            third signal
+     * @return signal
+     */
+    <A, B> Signal<Tuple3<T, A, B>> zip(Signal<A> a, Signal<B> b, CancellationToken token);
 
     /**
      * An immutable signal whose value never changes.
