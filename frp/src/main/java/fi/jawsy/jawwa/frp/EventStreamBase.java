@@ -15,6 +15,7 @@ import com.google.common.base.Supplier;
 
 import fi.jawsy.jawwa.lang.Effect;
 import fi.jawsy.jawwa.lang.Effects;
+import fi.jawsy.jawwa.lang.Function2;
 
 /**
  * Base class for event stream implementations
@@ -496,6 +497,37 @@ public abstract class EventStreamBase<E> implements EventStream<E>, Serializable
                 sink.fire(input);
             }
         }, token);
+    }
+
+    @Override
+    public <U> EventStream<U> foldLeft(final U initial, final Function2<U, E, U> f) {
+        class FoldLeftEventStream extends EventStreamBase<U> {
+            private static final long serialVersionUID = -8392580035947203236L;
+
+            @Override
+            public EventStream<U> foreach(final Effect<? super U> e, CancellationToken token) {
+                final AtomicReference<U> accum = new AtomicReference<U>(initial);
+
+                class FoldLeftEffect implements Effect<E>, Serializable {
+                    private static final long serialVersionUID = -7360438968497763005L;
+
+                    @Override
+                    public void apply(E input) {
+                        while (true) {
+                            U current = accum.get();
+                            U update = f.apply(current, input);
+                            if (accum.compareAndSet(current, update)) {
+                                e.apply(update);
+                                return;
+                            }
+                        }
+                    }
+                }
+                EventStreamBase.this.foreach(new FoldLeftEffect(), token);
+                return this;
+            }
+        }
+        return new FoldLeftEventStream();
     }
 
 }

@@ -1,6 +1,5 @@
 package fi.jawsy.jawwa.frp;
 
-import java.io.Serializable;
 import java.util.concurrent.Executor;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -20,7 +19,7 @@ public final class EventStreams {
     }
 
     @SuppressWarnings("rawtypes")
-    static class EmptyEventStream implements EventStream, Serializable {
+    static class EmptyEventStream extends EventStreamBase {
         private static final long serialVersionUID = 5638633110197759582L;
 
         @Override

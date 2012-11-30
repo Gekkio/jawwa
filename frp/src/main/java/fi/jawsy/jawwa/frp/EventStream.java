@@ -7,6 +7,7 @@ import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
 
 import fi.jawsy.jawwa.lang.Effect;
+import fi.jawsy.jawwa.lang.Function2;
 
 /**
  * Represents a stream of event objects of a specific type.
@@ -267,5 +268,7 @@ public interface EventStream<T> {
      * @return signal
      */
     Signal<T> hold(T initial, CancellationToken token);
+
+    <U> EventStream<U> foldLeft(U initial, Function2<U, T, U> f);
 
 }
