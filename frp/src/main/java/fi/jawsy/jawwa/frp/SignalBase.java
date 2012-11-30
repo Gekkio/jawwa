@@ -11,6 +11,7 @@ import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
 
 import fi.jawsy.jawwa.lang.Effect;
+import fi.jawsy.jawwa.lang.Function2;
 import fi.jawsy.jawwa.lang.Tuple2;
 import fi.jawsy.jawwa.lang.Tuple2Functions;
 import fi.jawsy.jawwa.lang.Tuple3;
@@ -247,6 +248,30 @@ public abstract class SignalBase<T> implements Signal<T>, Serializable, Supplier
 
         }
         return new DistinctSignal();
+    }
+
+    @Override
+    public <U> Signal<U> foldLeft(U initial, Function2<U, T, U> f) {
+        return foldLeft(initial, f, CancellationToken.NONE);
+    }
+
+    @Override
+    public <U> Signal<U> foldLeft(U initial, final Function2<U, T, U> f, CancellationToken token) {
+        final Signal.Var<U> foldLeftSignal = new Signal.Var<U>(f.apply(initial, now()));
+
+        this.change().foreach(new Effect<T>() {
+            @Override
+            public void apply(final T input) {
+                foldLeftSignal.update(new Function<U, U>() {
+                    @Override
+                    public U apply(U accumInput) {
+                        return f.apply(accumInput, input);
+                    }
+                });
+            }
+        }, token);
+
+        return foldLeftSignal;
     }
 
 }

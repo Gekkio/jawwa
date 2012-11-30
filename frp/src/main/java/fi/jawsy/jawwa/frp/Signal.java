@@ -8,6 +8,7 @@ import com.google.common.base.Function;
 import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableList;
 
+import fi.jawsy.jawwa.lang.Function2;
 import fi.jawsy.jawwa.lang.Tuple2;
 import fi.jawsy.jawwa.lang.Tuple3;
 
@@ -49,6 +50,10 @@ public interface Signal<T> {
      * @return signal
      */
     Signal<T> distinct();
+
+    <U> Signal<U> foldLeft(U initial, Function2<U, T, U> f);
+
+    <U> Signal<U> foldLeft(U initial, Function2<U, T, U> f, CancellationToken token);
 
     /**
      * Returns an event stream that will track the changes of this signal.
