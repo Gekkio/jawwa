@@ -44,6 +44,13 @@ public interface Signal<T> {
     T now();
 
     /**
+     * Returns a new signal that filters out sequential values if they are equal.
+     * 
+     * @return signal
+     */
+    Signal<T> distinct();
+
+    /**
      * Returns an event stream that will track the changes of this signal.
      * 
      * @return value

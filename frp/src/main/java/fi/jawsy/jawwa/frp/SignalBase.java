@@ -221,4 +221,32 @@ public abstract class SignalBase<T> implements Signal<T>, Serializable, Supplier
         });
         return zippedSignal;
     }
+
+    @Override
+    public Signal<T> distinct() {
+        final EventStream<T> change = change().distinct();
+        final EventStream<T> nowAndChange = nowAndChange().distinct();
+
+        class DistinctSignal extends SignalBase<T> {
+            private static final long serialVersionUID = -3549509419976918727L;
+
+            @Override
+            public T now() {
+                return SignalBase.this.now();
+            }
+
+            @Override
+            public EventStream<T> change() {
+                return change;
+            }
+
+            @Override
+            public EventStream<T> nowAndChange() {
+                return nowAndChange;
+            }
+
+        }
+        return new DistinctSignal();
+    }
+
 }
