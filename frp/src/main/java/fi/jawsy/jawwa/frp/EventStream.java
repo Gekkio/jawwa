@@ -114,6 +114,17 @@ public interface EventStream<T> {
     <U> EventStream<U> map(Supplier<U> s);
 
     /**
+     * Returns a new event stream that publishes the current value of the signal instead of the original event values.
+     * In practice this is useful if you don't care about the event values, and want to replace them with something more
+     * useful.
+     * 
+     * @param s
+     *            non-null signal
+     * @return event stream
+     */
+    <U> EventStream<U> map(Signal<U> s);
+
+    /**
      * Returns a new event stream that routes events based on the given function. The returned event stream will always
      * be connected to the event stream returned by the last invocation of the given function.
      * 
