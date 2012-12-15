@@ -73,6 +73,11 @@ public abstract class SignalBase<T> implements Signal<T>, Serializable, Supplier
     }
 
     @Override
+    public <U> Signal<U> map(Signal<U> s) {
+        return map(s.asSupplier());
+    }
+
+    @Override
     public <U> Signal<U> flatMap(final Function<? super T, Signal<U>> f) {
         Preconditions.checkNotNull(f, "function cannot be null");
         class FlatMappedSignal extends SignalBase<U> {

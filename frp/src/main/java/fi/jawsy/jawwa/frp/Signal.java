@@ -81,6 +81,15 @@ public interface Signal<T> {
     <U> Signal<U> map(U constant);
 
     /**
+     * Returns a new signal that replaces all values with values returned by the given signal.
+     * 
+     * @param s
+     *            non-null signal
+     * @return signal
+     */
+    <U> Signal<U> map(Signal<U> s);
+
+    /**
      * Returns a new signal that replaces all values with values returned by the given supplier.
      * 
      * @param s
