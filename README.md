@@ -1,6 +1,10 @@
 Jawwa: Jawsy Solutions libraries for Java 1.6+
 ==============================================
 
+## *Warning: This library is unmaintained and deprecated, and the Maven repository mentioned in this README doesn't exist anymore*
+
+All the standard Java 1.6 stuff has meen migrated to [Gekkio/drumfish](http://github.com/Gekkio/drumfish), and all the ZK components are now in [Gekkio/splake](http://github.com/Gekkio/splake).
+
 ## Introduction
 
 Jawwa is a multi-module Java library project containing many useful things for Java developers.
